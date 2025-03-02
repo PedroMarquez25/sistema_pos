@@ -15,7 +15,7 @@ class Window(tk.Tk):
 
         self.frame_principal = Principal(self, self.mostrar_login, self.mostrar_PuntoVenta)
         self.frame_registro = Registro(self, self.mostrar_principal, self.mostrar_login)
-        self.frame_login = Login(self, self.mostrar_registro, self.mostrar_principal)
+        self.frame_login = Login(self, self.mostrar_registro, self.mostrar_principal,self.mostrar_PuntoVenta)
         self.frame_PuntoVenta = PuntoVenta(self,self.mostrar_login)
 
         self.frames[Principal] = self.frame_principal
