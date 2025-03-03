@@ -6,6 +6,7 @@ from CPresentacion.registro import Registro
 from CPresentacion.login import Login
 from CPresentacion.punto_venta import PuntoVenta
 
+
 class Window(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -45,6 +46,7 @@ class Window(tk.Tk):
         self.title('Quicksale')
         w, h = cf.WIDTH - 100, cf.HEIGHT - 100
         centrar_ventana(self,w,h)
+        
         
 
  
