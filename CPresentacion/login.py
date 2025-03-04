@@ -33,25 +33,23 @@ class Login(tk.Frame):
         icono = tk.Label(self.formulario, text='\uf0c0', font=font_awesome, bg=colores.COLOR_SEGUNDARIO, fg=colores.COLOR_TEXTO)
         icono.pack(side='top', pady=5)
 
-        #label
+        #=====================================Label y campo usuario===============================================
         etiqueta_usuario = tk.Label(self.formulario, width=30 ,text='Usuario', font=('roboto', 14) ,fg=colores.COLOR_TEXTO, bg=colores.COLOR_PRINCIPAL, anchor=tk.W)
         etiqueta_usuario.pack(side='top', pady=5)
-
 
         self.entry_usuario = ttk.Entry(self.formulario, width=30, font=('Roboto', 14))
         self.entry_usuario.pack(ipady=5, side='top', pady=5)
 
-
+        #====================================Label y campo clave===================================================
         etiqueta_clave = tk.Label(self.formulario, width=30 ,text='Contraseña', font=('roboto', 14) ,fg=colores.COLOR_TEXTO, bg=colores.COLOR_PRINCIPAL, anchor=tk.W)
         etiqueta_clave.pack(side='top', pady=5)
-
 
         self.entry_clave = ttk.Entry(self.formulario, width=30, font=('Roboto', 14))
         self.entry_clave.pack(side='top',ipady=5, pady=5)
         self.entry_clave.config(show="*")
 
 
-        #Botones
+        #======================================Botones de inicio y registro============================================
 
         self.boton_login = tk.Button(self.formulario, width=13, text='Login in', font=('Roboto', 14,'bold'), bd=0
                                      ,bg=colores.BOTON_PRODUCTOS,command=self.login_in)
@@ -66,18 +64,18 @@ class Login(tk.Frame):
         clave = self.entry_clave.get()
         validar = UsuarioValid()
 
+        if len(usuario) == 0 or len(clave) == 0:
+            messagebox.showerror(title='Mensaje', message='Complete los campos')
+            return 0
+
         comprobante = validar.validar(usuario, clave)
 
         if comprobante == 0:
             messagebox.showerror(message='Contraseña o usuario incorrectos', title='Mensaje')
         elif comprobante == 1:
-            self.entry_usuario.delete(0, 'end')
-            self.entry_clave.delete(0, 'end')
-            self.mostrar_PuntoVenta()
+            self.mostrar_PuntoVenta(usuario)
         elif comprobante == 2:
-            self.entry_usuario.delete(0, 'end')
-            self.entry_clave.delete(0, 'end')
-            self.mostrar_principal()
+            self.mostrar_principal(usuario)
             
     def ir_registro(self):
         self.mostrar_registro()

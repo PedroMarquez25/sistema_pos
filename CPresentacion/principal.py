@@ -1,25 +1,165 @@
 import tkinter as tk
 import config as colores
 
+from util.util_ventana import centrar_ventana
+from util.util_imagenes import leer_imagen
+from tkinter import font, messagebox, ttk
+
 class Principal(tk.Frame):
-    def __init__(self, parent, mostrar_login, mostrar_PuntoVenta):
+    def __init__(self, parent, mostrar_login, mostrar_PuntoVenta, usuario):
         super().__init__(parent)
         self.configure(background=colores.FONDO_PRINCIPAL)
         self.place(x=0,y=0, relheight=1, relwidth=1)
 
+        self.mostrar_login = mostrar_login
+        self.mostrar_PuntoVenta = mostrar_PuntoVenta
+        self.usuario = usuario
+        self.font_awesome = font.Font(family="Font Awesome 6 Free Solid" ,size=20)
+        self.font_aw = font.Font(family="Font Awesome" ,size=12)
+
         self.paneles()
-        self.crear_widgets()
+        self.widgets_barra_superior()
+        self.widgets_panel_izquierdo()
 
 
     def paneles(self):
-        self.barra_superior = tk.Frame(self, bg=colores.COLOR_SEGUNDARIO, height=70)
+        self.barra_superior = tk.Frame(self, bg=colores.COLOR_SEGUNDARIO, height=60)
         self.barra_superior.pack(side=tk.TOP, fill=tk.X)
 
-        self.panel_izquierdo = tk.Frame(self, bg=colores.COLOR_PRINCIPAL, width=270)
+        self.panel_izquierdo = tk.Frame(self, bg=colores.COLOR_PRINCIPAL, width=260)
         self.panel_izquierdo.pack(side=tk.LEFT, fill=tk.Y)
 
         self.cuerpo = tk.Frame(self, background=colores.FONDO_SEGUNDARIO, bd=2)
         self.cuerpo.pack(side=tk.RIGHT, fill='both' ,expand=True, padx=10, pady=10)
         
-    def crear_widgets(self):
-        pass
+    def widgets_barra_superior(self):
+        self.icono = tk.Button(self.barra_superior, text= '\uf0c9', font=self.font_awesome,
+                               command=self.toggle_panel)
+        self.icono.config(bg=colores.COLOR_SEGUNDARIO, fg=colores.COLOR_TEXTO, bd=0)
+        self.icono.pack(side=tk.LEFT, padx=5)
+
+        self.lbl_nombre = tk.Label(self.barra_superior, text='Quicksale', font=('Montserrat', 20))
+        self.lbl_nombre.config(bg=colores.COLOR_SEGUNDARIO, fg=colores.COLOR_TEXTO)
+        self.lbl_nombre.pack(side=tk.LEFT)
+
+        #====================crear imagen de perfil con un canvas================
+
+        self.imagen = leer_imagen("c:/Users/pedro/OneDrive/Pictures/fot.jpg", (50,40))
+
+        self.button_perfil = tk.Button(self.barra_superior, image=self.imagen, borderwidth=0, highlightthickness=0)
+        self.button_perfil.pack(side=tk.RIGHT, padx= 10, pady=10)
+
+
+        #================Label con el nombre del usuario=======================
+        self.lbl_nombre_usuario = tk.Label(self.barra_superior, text=self.usuario ,font=('Lato',15))
+        self.lbl_nombre_usuario.config(bg=colores.COLOR_SEGUNDARIO, fg=colores.COLOR_TEXTO)
+        self.lbl_nombre_usuario.pack(side=tk.RIGHT, padx=5 )
+
+        #================Boton de notificaciones==================================
+        self.button_notify = tk.Button(self.barra_superior, text="\uf0f3", font=self.font_awesome,
+                                       command=self.notify)
+        self.button_notify.config(bg=colores.COLOR_SEGUNDARIO, fg=colores.COLOR_TEXTO, bd=0)
+        self.button_notify.pack(side=tk.RIGHT, padx = 5)
+
+    def widgets_panel_izquierdo(self):
+        ancho = 25
+        alto = 1
+        pad = 4
+        ipad = 2
+
+        #============Cerrar turno========
+        self.btn_cerrar_turno = tk.Button(self.panel_izquierdo, text='Cerrar turno  \uf2f5', height=alto, width=ancho, bd=1,
+                                          command=self.cerrar_turno)
+        self.btn_cerrar_turno.config( bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
+        self.btn_cerrar_turno.pack(side=tk.TOP, pady=pad, ipady=5)
+                                         
+        #======================================Home=========================================================
+        self.btn_home = tk.Button(self.panel_izquierdo, text="   \uf015 Home", height=alto, width=ancho, bd=0)
+        self.btn_home.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
+        self.btn_home.pack(side=tk.TOP, pady=pad, ipady=ipad)
+
+        #====================================productos====================================================
+        lbl_nombre = tk.Label(self.panel_izquierdo,text='Inventario', height=alto, width=ancho, bd=0)
+        lbl_nombre.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=('regular',11), anchor='w')
+        lbl_nombre.pack(side=tk.TOP, pady=pad, ipady=4)
+
+        self.btn_consultar_producto = tk.Button(self.panel_izquierdo, text='   \uf468 Consultar', height=alto, width=ancho, bd=0)
+        self.btn_consultar_producto.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
+        self.btn_consultar_producto.pack(side=tk.TOP, pady=pad, ipady=ipad)
+
+        self.btn_registrar_producto = tk.Button(self.panel_izquierdo, text='   \uf0fe Registrar', height=alto, width=ancho, bd=0)
+        self.btn_registrar_producto.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
+        self.btn_registrar_producto.pack(side=tk.TOP, pady=pad, ipady=ipad)
+
+        self.btn_buscar_producto = tk.Button(self.panel_izquierdo, text="   \uf002 Buscar", height=alto, width=ancho, bd=0)
+        self.btn_buscar_producto.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
+        self.btn_buscar_producto.pack(side=tk.TOP, pady=pad, ipady=ipad)
+
+        self.btn_categoria_producto = tk.Button(self.panel_izquierdo, text="   \uf00b Categorias", height=alto, width=ancho, bd=0)
+        self.btn_categoria_producto.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
+        self.btn_categoria_producto.pack(side=tk.TOP, pady=pad, ipady=ipad)
+
+        self.btn_reponer_producto = tk.Button(self.panel_izquierdo, text='   \uf2f1 Reponer', height=alto, width=ancho, bd=0)
+        self.btn_reponer_producto.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
+        self.btn_reponer_producto.pack(side=tk.TOP, pady=pad, ipady=ipad)
+
+        #===================================Ventas=====================================================================
+        lbl_ventas = tk.Label(self.panel_izquierdo,text='Ventas', height=alto, width=ancho, bd=0)
+        lbl_ventas.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=('regular',11), anchor='w')
+        lbl_ventas.pack(side=tk.TOP, pady=pad, ipady=4)
+
+        self.btn_lista_ventas = tk.Button(self.panel_izquierdo, text='   \uf07a Lista de ventas', height=alto, width=ancho, bd=0)
+        self.btn_lista_ventas.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
+        self.btn_lista_ventas.pack(side=tk.TOP, pady=pad, ipady=ipad)
+
+        self.btn_buscar_venta = tk.Button(self.panel_izquierdo, text="   \uf002 Buscar venta", height=alto, width=ancho, bd=0)
+        self.btn_buscar_venta.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
+        self.btn_buscar_venta.pack(side=tk.TOP, pady=pad, ipady=ipad)
+
+        #=====================================Usuarios========================================================================
+        lbl_usuario = tk.Label(self.panel_izquierdo,text='Usuarios', height=alto, width=ancho, bd=0)
+        lbl_usuario.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=('regular',11), anchor='w')
+        lbl_usuario.pack(side=tk.TOP, pady=pad, ipady=4)
+
+        self.btn_consulta_usuario = tk.Button(self.panel_izquierdo, text="   \uf007 Cosultar", height=alto, width=ancho, bd=0)
+        self.btn_consulta_usuario.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
+        self.btn_consulta_usuario.pack(side=tk.TOP, pady=pad, ipady=ipad)
+        
+        self.btn_registrar_usuario = tk.Button(self.panel_izquierdo, text="   \uf234 Registar", height=alto, width=ancho, bd=0)
+        self.btn_registrar_usuario.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
+        self.btn_registrar_usuario.pack(side=tk.TOP, pady=pad, ipady=ipad)
+
+        self.btn_modificar_acceso = tk.Button(self.panel_izquierdo, text="   \uf044 Modificar acceso", height=alto, width=ancho, bd=0)
+        self.btn_modificar_acceso.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
+        self.btn_modificar_acceso.pack(side=tk.TOP, pady=pad, ipady=ipad)
+
+        self.btn_punto_venta = tk.Button(self.panel_izquierdo, text='Punto de venta \uf061', width=ancho, height=alto, bd=1,
+                                         command=self.abrir_pos)
+        self.btn_punto_venta.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
+        self.btn_punto_venta.pack(side=tk.TOP, pady=pad, ipady=5)
+
+    def cerrar_turno(self):
+        respuesta = messagebox.askyesno(title='Mensaje', message='¿Quieres salir?')
+        if respuesta:
+            self.mostrar_login()
+    
+    def abrir_pos(self):
+        respuesta = messagebox.askyesno('Confirmacion', '¿Quieres abril el punto de venta?')
+        if respuesta:
+            self.mostrar_PuntoVenta(self.usuario)
+
+    def toggle_panel(self):
+        if self.panel_izquierdo.winfo_ismapped():
+            self.panel_izquierdo.pack_forget()
+        else:
+            self.panel_izquierdo.pack(side=tk.LEFT, fill='y')
+
+    def notify(self):
+        self.notificaciones = tk.Toplevel(self)
+        self.notificaciones.geometry("400x500+900+70")
+        self.notificaciones.config(bg=colores.COLOR_SEGUNDARIO)
+        self.notificaciones.title("Notificaciones")
+        self.notificaciones.resizable(0,0)
+        self.notificaciones.grab_set()
+
+

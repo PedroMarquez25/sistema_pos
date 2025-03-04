@@ -12,35 +12,39 @@ class Window(tk.Tk):
         super().__init__()
         self.config_window()
 
-        self.frames = {}
+        self.frame_principal = Principal(self, self.mostrar_login, self.mostrar_PuntoVenta, '---')
+        self.frame_puntoVenta = PuntoVenta(self, self.mostrar_login, '---')
+        self.frame_registro = Registro(self,self.mostrar_login)
 
-        self.frame_principal = Principal(self, self.mostrar_login, self.mostrar_PuntoVenta)
-        self.frame_registro = Registro(self, self.mostrar_principal, self.mostrar_login)
-        self.frame_login = Login(self, self.mostrar_registro, self.mostrar_principal,self.mostrar_PuntoVenta)
-        self.frame_PuntoVenta = PuntoVenta(self,self.mostrar_login)
+        self.mostrar_login()
 
-        self.frames[Principal] = self.frame_principal
-        self.frames[Registro] = self.frame_registro
-        self.frames[Login] = self.frame_login
-        self.frames[PuntoVenta] = self.frame_PuntoVenta
-
-        self.mostrar_frame(Login)
-
-    def mostrar_frame(self, frame_class):
-        frame = self.frames[frame_class]
-        frame.tkraise()
-
+  
     def mostrar_registro(self):
-        self.mostrar_frame(Registro)
+        self.frame_login.destroy()
+        self.frame_registro = Registro(self, self.mostrar_login)
 
-    def mostrar_principal(self):
-        self.mostrar_frame(Principal)
+
+    def mostrar_principal(self, usuario):
+        self.frame_login.destroy()
+        self.frame_registro.destroy()
+
+        self.frame_principal = Principal(self, self.mostrar_login, self.mostrar_PuntoVenta, usuario)
         
     def mostrar_login(self):
-        self.mostrar_frame(Login)
+        self.frame_principal.destroy()
+        self.frame_puntoVenta.destroy()
+        self.frame_registro.destroy()
 
-    def mostrar_PuntoVenta(self):
-        self.mostrar_frame(PuntoVenta)
+        self.frame_login = Login(self, self.mostrar_registro, self.mostrar_principal, self.mostrar_PuntoVenta)
+
+    def mostrar_PuntoVenta(self, usuario):
+        self.frame_login.destroy()
+        self.frame_registro.destroy()
+        self.frame_principal.destroy()
+
+        self.frame_puntoVenta = PuntoVenta(self, self.mostrar_login, usuario)
+
+
 
     def config_window(self):
         self.title('Quicksale')
