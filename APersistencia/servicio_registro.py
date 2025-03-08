@@ -9,9 +9,9 @@ class Registrar(Conexion):
         self.conexion.commit()
         print(f'registros insertados : {self.cursor.rowcount}')
 
-    def registrar_producto(self, descripcion, precio, cantidad, fecha_ven, id_categoria, imagen = 'Sinfoto'):
-        datos = (descripcion, precio, cantidad, fecha_ven, id_categoria, imagen)
-        sql = 'insert into productos(descripcion, precio, cantidad, fecha_vencimiento, id_categoria, imagen) values(%s, %s, %s, %s, %s, %s)'
+    def registrar_producto(self, descripcion, precio, cantidad, fecha_ven, id_categoria,imagen = 'Sinfoto', estado = True):
+        datos = (descripcion, precio, cantidad, fecha_ven, id_categoria, imagen, estado)
+        sql = 'insert into productos(descripcion, precio, cantidad, fecha_vencimiento, id_categoria, imagen, estado) values(%s, %s, %s, %s, %s, %s, %s)'
         
         self.guardar_datos(sql, datos)
 

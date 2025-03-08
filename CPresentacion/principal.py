@@ -4,11 +4,12 @@ import config as colores
 from util.util_ventana import centrar_ventana
 from util.util_imagenes import leer_imagen
 from tkinter import font, messagebox, ttk
+from CPresentacion.principal_inv_consulta import InventarioConsulta
+from CPresentacion.principal_inv_registrar import InventarioRegistrar
 
 class Principal(tk.Frame):
     def __init__(self, parent, mostrar_login, mostrar_PuntoVenta, usuario):
         super().__init__(parent)
-        self.configure(background=colores.FONDO_PRINCIPAL)
         self.place(x=0,y=0, relheight=1, relwidth=1)
 
         self.mostrar_login = mostrar_login
@@ -29,8 +30,8 @@ class Principal(tk.Frame):
         self.panel_izquierdo = tk.Frame(self, bg=colores.COLOR_PRINCIPAL, width=260)
         self.panel_izquierdo.pack(side=tk.LEFT, fill=tk.Y)
 
-        self.cuerpo = tk.Frame(self, background=colores.FONDO_SEGUNDARIO, bd=2)
-        self.cuerpo.pack(side=tk.RIGHT, fill='both' ,expand=True, padx=10, pady=10)
+        self.cuerpo = tk.Frame(self, background=colores.FONDO_PRINCIPAL, bd=2)
+        self.cuerpo.pack(side=tk.RIGHT, fill='both' ,expand=True)
         
     def widgets_barra_superior(self):
         self.icono = tk.Button(self.barra_superior, text= '\uf0c9', font=self.font_awesome,
@@ -62,10 +63,7 @@ class Principal(tk.Frame):
         self.button_notify.pack(side=tk.RIGHT, padx = 5)
 
     def widgets_panel_izquierdo(self):
-        ancho = 25
-        alto = 1
-        pad = 4
-        ipad = 2
+        ancho, alto, pad, ipad = 25, 1, 4, 2
 
         #============Cerrar turno========
         self.btn_cerrar_turno = tk.Button(self.panel_izquierdo, text='Cerrar turno  \uf2f5', height=alto, width=ancho, bd=1,
@@ -83,17 +81,20 @@ class Principal(tk.Frame):
         lbl_nombre.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=('regular',11), anchor='w')
         lbl_nombre.pack(side=tk.TOP, pady=pad, ipady=4)
 
-        self.btn_consultar_producto = tk.Button(self.panel_izquierdo, text='   \uf468 Consultar', height=alto, width=ancho, bd=0)
+        self.btn_consultar_producto = tk.Button(self.panel_izquierdo, text='   \uf468 Consultar', height=alto, width=ancho, bd=0,
+                                                command=self.inventario_consulta)
         self.btn_consultar_producto.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
         self.btn_consultar_producto.pack(side=tk.TOP, pady=pad, ipady=ipad)
 
-        self.btn_registrar_producto = tk.Button(self.panel_izquierdo, text='   \uf0fe Registrar', height=alto, width=ancho, bd=0)
+        self.btn_registrar_producto = tk.Button(self.panel_izquierdo, text='   \uf0fe Registrar', height=alto, width=ancho, bd=0,
+                                                command=self.inventario_registrar)
         self.btn_registrar_producto.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
         self.btn_registrar_producto.pack(side=tk.TOP, pady=pad, ipady=ipad)
 
-        self.btn_buscar_producto = tk.Button(self.panel_izquierdo, text="   \uf002 Buscar", height=alto, width=ancho, bd=0)
+        self.btn_buscar_producto = tk.Button(self.panel_izquierdo, text='   \uf002 Buscar', height=alto, width=ancho, bd=0)
         self.btn_buscar_producto.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
         self.btn_buscar_producto.pack(side=tk.TOP, pady=pad, ipady=ipad)
+
 
         self.btn_categoria_producto = tk.Button(self.panel_izquierdo, text="   \uf00b Categorias", height=alto, width=ancho, bd=0)
         self.btn_categoria_producto.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
@@ -138,22 +139,20 @@ class Principal(tk.Frame):
         self.btn_punto_venta.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
         self.btn_punto_venta.pack(side=tk.TOP, pady=pad, ipady=5)
 
+
     def cerrar_turno(self):
         respuesta = messagebox.askyesno(title='Mensaje', message='¿Quieres salir?')
         if respuesta:
-            self.mostrar_login()
-    
+            self.mostrar_login()    
     def abrir_pos(self):
         respuesta = messagebox.askyesno('Confirmacion', '¿Quieres abril el punto de venta?')
         if respuesta:
             self.mostrar_PuntoVenta(self.usuario)
-
     def toggle_panel(self):
         if self.panel_izquierdo.winfo_ismapped():
             self.panel_izquierdo.pack_forget()
         else:
             self.panel_izquierdo.pack(side=tk.LEFT, fill='y')
-
     def notify(self):
         self.notificaciones = tk.Toplevel(self)
         self.notificaciones.geometry("400x500+900+70")
@@ -161,5 +160,19 @@ class Principal(tk.Frame):
         self.notificaciones.title("Notificaciones")
         self.notificaciones.resizable(0,0)
         self.notificaciones.grab_set()
+  
+    def clear_body(self):
+        for widget in self.cuerpo.winfo_children():
+            widget.destroy()
+
+    def inventario_consulta(self):
+        self.clear_body()
+        InventarioConsulta(self.cuerpo, self.inventario_registrar)
+    
+    def inventario_registrar(self):
+        self.clear_body()
+        InventarioRegistrar(self.cuerpo)
+
+
 
 

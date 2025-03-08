@@ -51,15 +51,17 @@ class Login(tk.Frame):
 
         #======================================Botones de inicio y registro============================================
 
-        self.boton_login = tk.Button(self.formulario, width=13, text='Login in', font=('Roboto', 14,'bold'), bd=0
+        self.boton_login = tk.Button(self.formulario, width=13, text='Login in', font=('Roboto', 14), bd=0
                                      ,bg=colores.BOTON_PRODUCTOS,command=self.login_in)
         self.boton_login.pack(pady=15, ipady=4)
 
-        self.boton_registro = tk.Button(self.formulario, width=10, text='Registrarse', font=('Roboto',14,'bold'),bd=0,
-                                        background=colores.BOTON_PRODUCTOS ,command=self.ir_registro)
+        self.boton_registro = tk.Button(self.formulario, width=10, text='Registrarse', font=('Roboto',14),bd=0,
+                                        background=colores.BOTON_PRODUCTOS ,command=self.mostrar_registro)
         self.boton_registro.pack(ipady=4)
     
     def login_in(self):
+        self.mostrar_principal('Pedro')
+        '''
         usuario = self.entry_usuario.get()
         clave = self.entry_clave.get()
         validar = UsuarioValid()
@@ -76,9 +78,8 @@ class Login(tk.Frame):
             self.mostrar_PuntoVenta(usuario)
         elif comprobante == 2:
             self.mostrar_principal(usuario)
-            
-    def ir_registro(self):
-        self.mostrar_registro()
+            '''
+        
          
         
    

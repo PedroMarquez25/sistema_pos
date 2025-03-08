@@ -11,8 +11,8 @@ class ServiciosConsultaSimple(Consulta):
         registros = self.consulta_simple('producto')
 
         for i in registros:
-            id, descripcion, precio, cantidad, fecha_ven, id_categoria, imagen = i 
-            productos.append(modelos.Productos(id, descripcion, precio, cantidad, fecha_ven, id_categoria, imagen))
+            id, descripcion, precio, cantidad, fecha_ven, id_categoria, imagen, estado = i 
+            productos.append(modelos.Productos(id, descripcion, precio, cantidad, fecha_ven, id_categoria, imagen, estado))
         
         return productos
     

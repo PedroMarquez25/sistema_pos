@@ -29,7 +29,7 @@ class Producto_venta:
 
 
 class Productos:
-    def __init__(self, id_producto, descripcion, precio, cantidad, fecha_ven, id_categoria, imagen):
+    def __init__(self, id_producto, descripcion, precio, cantidad, fecha_ven, id_categoria, imagen, estado):
         self.id_producto = id_producto
         self.descripcion = descripcion
         self.precio = precio
@@ -37,6 +37,7 @@ class Productos:
         self.fecha_vencimiento = fecha_ven
         self.id_categoria = id_categoria
         self.imagen = imagen
+        self.estado = estado
 
     def print(self):
         print(f'{self.id_producto} {self.descripcion} {self.precio} {self.cantidad} {self.fecha_vencimiento} {self.id_categoria}')
