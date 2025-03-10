@@ -2,8 +2,8 @@ import tkinter as tk
 import config as colores
 import time
 
-from tkinter import ttk, messagebox
-from tkinter import font
+from tkinter import ttk, messagebox, font
+
 from BDominio.usuarios.validar_usuario import UsuarioValid
 
 class Login(tk.Frame):

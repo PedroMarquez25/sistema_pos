@@ -4,8 +4,14 @@ import config as colores
 from util.util_ventana import centrar_ventana
 from util.util_imagenes import leer_imagen
 from tkinter import font, messagebox, ttk
-from CPresentacion.principal_inv_consulta import InventarioConsulta
-from CPresentacion.principal_inv_registrar import InventarioRegistrar
+
+#inventario
+from CPresentacion.inventario.principal_inv_consulta import InventarioConsulta
+from CPresentacion.inventario.principal_inv_registrar import InventarioRegistrar
+from CPresentacion.inventario.principal_inv_buscar import InventarioBuscar
+from CPresentacion.inventario.principal_inv_categoira import InventarioCatalogo
+#usuarios
+from CPresentacion.usuarios.consultar_usuario import UsuarioConsulta
 
 class Principal(tk.Frame):
     def __init__(self, parent, mostrar_login, mostrar_PuntoVenta, usuario):
@@ -92,17 +98,15 @@ class Principal(tk.Frame):
         self.btn_registrar_producto.pack(side=tk.TOP, pady=pad, ipady=ipad)
 
         self.btn_buscar_producto = tk.Button(self.panel_izquierdo, text='   \uf002 Buscar', height=alto, width=ancho, bd=0)
-        self.btn_buscar_producto.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
+        self.btn_buscar_producto.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w',
+                                        command=self.inventario_buscar)
         self.btn_buscar_producto.pack(side=tk.TOP, pady=pad, ipady=ipad)
 
 
-        self.btn_categoria_producto = tk.Button(self.panel_izquierdo, text="   \uf00b Categorias", height=alto, width=ancho, bd=0)
+        self.btn_categoria_producto = tk.Button(self.panel_izquierdo, text="   \uf00b Categorias", height=alto, width=ancho, bd=0,
+                                                command=self.inventario_catalago)
         self.btn_categoria_producto.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
         self.btn_categoria_producto.pack(side=tk.TOP, pady=pad, ipady=ipad)
-
-        self.btn_reponer_producto = tk.Button(self.panel_izquierdo, text='   \uf2f1 Reponer', height=alto, width=ancho, bd=0)
-        self.btn_reponer_producto.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
-        self.btn_reponer_producto.pack(side=tk.TOP, pady=pad, ipady=ipad)
 
         #===================================Ventas=====================================================================
         lbl_ventas = tk.Label(self.panel_izquierdo,text='Ventas', height=alto, width=ancho, bd=0)
@@ -122,7 +126,8 @@ class Principal(tk.Frame):
         lbl_usuario.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=('regular',11), anchor='w')
         lbl_usuario.pack(side=tk.TOP, pady=pad, ipady=4)
 
-        self.btn_consulta_usuario = tk.Button(self.panel_izquierdo, text="   \uf007 Cosultar", height=alto, width=ancho, bd=0)
+        self.btn_consulta_usuario = tk.Button(self.panel_izquierdo, text="   \uf007 Cosultar", height=alto, width=ancho, bd=0,
+                                              command=self.usuario_consulta)
         self.btn_consulta_usuario.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
         self.btn_consulta_usuario.pack(side=tk.TOP, pady=pad, ipady=ipad)
         
@@ -137,7 +142,7 @@ class Principal(tk.Frame):
         self.btn_punto_venta = tk.Button(self.panel_izquierdo, text='Punto de venta \uf061', width=ancho, height=alto, bd=1,
                                          command=self.abrir_pos)
         self.btn_punto_venta.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
-        self.btn_punto_venta.pack(side=tk.TOP, pady=pad, ipady=5)
+        self.btn_punto_venta.pack(side=tk.BOTTOM, pady=pad, ipady=5)
 
 
     def cerrar_turno(self):
@@ -165,14 +170,23 @@ class Principal(tk.Frame):
         for widget in self.cuerpo.winfo_children():
             widget.destroy()
 
+    #inventario
     def inventario_consulta(self):
         self.clear_body()
         InventarioConsulta(self.cuerpo, self.inventario_registrar)
-    
     def inventario_registrar(self):
         self.clear_body()
         InventarioRegistrar(self.cuerpo)
+    def inventario_buscar(self):
+        self.clear_body()
+        InventarioBuscar(self.cuerpo)
+    def inventario_catalago(self):
+        self.clear_body()
+        InventarioCatalogo(self.cuerpo)
 
-
+    #Usuarios
+    def usuario_consulta(self):
+        self.clear_body()
+        UsuarioConsulta(self.cuerpo)
 
 

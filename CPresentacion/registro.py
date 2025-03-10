@@ -100,12 +100,6 @@ class Registro(tk.Frame):
         self.txt_rol_usario.grid(row=2, column=1, padx=10, pady=10, ipady=5)
         self.txt_rol_usario.current(0)
 
-        lbl_ciudad_usario = tk.Label(lblfrme_nuevo_usuario, text='Ciudad', font=('roboto', 12), background=colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO)
-        lbl_ciudad_usario.grid(row=3, column=0, padx=10, pady=10)
-        self.txt_ciudad_usario = ttk.Entry(lblfrme_nuevo_usuario, width=20,  font=('roboto', 12))
-        self.txt_ciudad_usario.grid(row=3, column=1, padx=10, pady=10, ipady=5)
-        self.txt_ciudad_usario.insert(0, 'Opcional')
-
         lbl_usuario_usario = tk.Label(lblfrme_nuevo_usuario, text='Usuario', font=('roboto', 12), background=colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO)
         lbl_usuario_usario.grid(row=4, column=0, padx=10, pady=10)
         self.txt_usuario_usario = ttk.Entry(lblfrme_nuevo_usuario,width=20,  font=('roboto', 12))
@@ -135,7 +129,6 @@ class Registro(tk.Frame):
         dni = self.txt_dni_usario.get()
         nombre = self.txt_nombre_usario.get()
         rol = self.txt_rol_usario.get()
-        ciudad = '--' if self.txt_ciudad_usario.get() == 'Opcional' else self.txt_ciudad_usario.get()
         usuario = self.txt_usuario_usario.get()
         clave1 = self.txt_clave_usario.get()
         clave2 = self.txt_clave2_usario.get()
@@ -143,7 +136,7 @@ class Registro(tk.Frame):
         if self.campos_vacios(dni, nombre, usuario, clave1, clave2) and valid_user.comprobar_dni(dni) and valid_user.clave_iguales(clave1, clave2) and valid_user.comprobar_usuario(usuario):
             guardar = GuardarUsuario()
 
-            if guardar.guardar_datos(dni, nombre, usuario, clave1, rol, ciudad):
+            if guardar.guardar_datos(dni, nombre, usuario, clave1, rol):
                 self.frame_nuevo_usario.destroy()
                 messagebox.showinfo(title='Mensaje', message='Usuario creado correctamente')
                 

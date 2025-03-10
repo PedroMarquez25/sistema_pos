@@ -4,8 +4,9 @@ class UsuarioValid:
     def __init__(self):
          self.consulta = ServiciosConsultaSimple()
          self.usuarios = self.consulta.usuarios()
-
-    def validar(self, usuario, clave):    
+        
+    #verificar acceso para entrar en la aplicacion
+    def validar(self, usuario, clave):   
         retorno = 0
         
         for i in self.usuarios:

@@ -77,7 +77,7 @@ class ServiciosConsultaSimple(Consulta):
         registros = self.consulta_simple('usuario')
 
         for i in registros:
-            dni, nombre, usuario, clave, rol, acceso, n_caja, ciudad, imagen = i 
-            usuarios.append(modelos.Usuarios(dni, nombre, usuario, clave, rol, acceso, n_caja, ciudad, imagen ))
+            dni, nombre, usuario, clave, rol, acceso, n_caja, imagen = i 
+            usuarios.append(modelos.Usuarios(dni, nombre, usuario, clave, rol, acceso, n_caja, imagen ))
 
         return usuarios

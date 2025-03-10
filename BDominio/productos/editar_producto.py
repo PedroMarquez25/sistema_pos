@@ -10,8 +10,8 @@ class EditarProducto():
             cant = int(cant)
             id_categoria = int(id_categoria)
             fecha_ven = None if fecha_ven == '0' else fecha_ven
-        except ValueError:
-            print('Datos inconpatibles')
+        except ValueError as e:
+            print('Datos inconpatible')
             return False
         
         try:
@@ -22,6 +22,24 @@ class EditarProducto():
             return False
         
         return True
+    
+    def reponer_producto(self, id, cantidad):
+        try:
+            cantidad = int(cantidad)
+        except Exception as e:
+            print('Error Datos incopatibles')
+            return False
+        
+        try:
+            self.Editar.reponer_producto(id, cantidad)
+        except Exception as e:
+            print('Error en la sentencia sql')
+            return
+        
+        return True
+
+
+
           
             
 

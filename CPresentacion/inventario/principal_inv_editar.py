@@ -6,7 +6,6 @@ from tkinter import font, messagebox, ttk, filedialog
 from util.util_imagenes import leer_imagen
 from BDominio.productos.categorias_datos import DatosCategoria
 from BDominio.productos.editar_producto import EditarProducto
-import os
 
 class EditarProductoTop(tk.Toplevel):
     def __init__(self, master, producto, update_lista):
@@ -80,6 +79,7 @@ class EditarProductoTop(tk.Toplevel):
         self.entry_cantidad = ttk.Entry(self.frame_formulario,width=20,  font=('roboto', 12))
         self.entry_cantidad.grid(row=5, column=1, padx=15, pady=5, ipady=5)
         self.entry_cantidad.insert(0, self.producto['cantidad'])
+        self.entry_cantidad.config(state=tk.DISABLED)
 
         #categorias
 
@@ -127,7 +127,9 @@ class EditarProductoTop(tk.Toplevel):
          id = self.entry_id.get()
          descripcrion = self.entry_descripcion.get()
          precio = self.entry_precio.get()
+         self.entry_cantidad.config(state=tk.NORMAL)
          cantidad = self.entry_cantidad.get()
+         self.entry_cantidad.config(state=tk.DISABLED)
          categoria = self.categoria.id_categoria(self.Combobox_categoria.get())
          estado = self.entry_estado.get()
          fecha = '0'
@@ -150,8 +152,6 @@ class EditarProductoTop(tk.Toplevel):
             else:
                  messagebox.showwarning('Error', 'A ocurrido un error inesperado')
                  
-
-
     def campos_vacios(self, desc, pre, cant, fecha):
          if len(desc) != 0 and len(pre) != 0 and len(cant) != 0 and len(fecha) != 0:
               return True

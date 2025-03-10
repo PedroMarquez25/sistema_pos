@@ -53,7 +53,7 @@ class Telf_admi:
 
 
 class Usuarios:
-    def __init__(self, dni, nombre, usuario, clave, rol, acceso, n_cajero, ciudad, imagen_perfil):
+    def __init__(self, dni, nombre, usuario, clave, rol, acceso, n_cajero, imagen_perfil):
         self.dni= dni
         self.nombre = nombre
         self.usuario = usuario
@@ -61,11 +61,8 @@ class Usuarios:
         self.rol = rol
         self.acceso = acceso
         self.n_caja = n_cajero
-        self.ciudad = ciudad
         self.perfil = imagen_perfil
-        
-    def print(self):
-        print(f'{self.dni} {self.nombre} {self.usuario} {self.clave} {self.rol} {self.acceso} {self.n_caja}')  
+         
         
 
 class Ventas:

@@ -39,9 +39,9 @@ class Registrar(Conexion):
 
         self.guardar_datos(sql, datos)
 
-    def registrar_usuario(self, dni, nombre, usuario, clave, rol, acceso, ciudad, imagen):
-        datos = (dni, nombre, usuario, clave, rol, acceso, ciudad, imagen)
-        sql = 'insert into usuarios(dni, nombre, usuario, clave, rol, acceso, ciudad, imagen) values(%s,%s,%s,%s,%s,%s,%s,%s)'
+    def registrar_usuario(self, dni, nombre, usuario, clave, rol, acceso, imagen):
+        datos = (dni, nombre, usuario, clave, rol, acceso, imagen)
+        sql = 'insert into usuarios(dni, nombre, usuario, clave, rol, acceso, imagen) values(%s,%s,%s,%s,%s,%s,%s)'
 
         self.guardar_datos(sql,datos)
 
