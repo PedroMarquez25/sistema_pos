@@ -136,21 +136,28 @@ class Registro(tk.Frame):
         if self.campos_vacios(dni, nombre, usuario, clave1, clave2) and valid_user.comprobar_dni(dni) and valid_user.clave_iguales(clave1, clave2) and valid_user.comprobar_usuario(usuario):
             guardar = GuardarUsuario()
 
-            if guardar.guardar_datos(dni, nombre, usuario, clave1, rol):
-                self.frame_nuevo_usario.destroy()
-                messagebox.showinfo(title='Mensaje', message='Usuario creado correctamente')
-                
-            else:
-                messagebox.showerror(title='Mensaje', message='Error inesperado')
+            try:
+                dni = int(dni)
+            except Exception as e:
+                messagebox.showerror('Error', 'Dni contiene valores no numericos')
+                return 0
+
+            if messagebox.askretrycancel(title='Mensaje', message='¿Registrar usuario?', parent = self.frame_nuevo_usario):
+                if guardar.guardar_datos(dni, nombre, usuario, clave1, rol):
+                    messagebox.showinfo(title='Mensaje', message='Usuario creado correctamente', parent = self.frame_nuevo_usario)
+                    self.frame_nuevo_usario.destroy()
+                    
+                else:
+                    messagebox.showerror(title='Mensaje', message='Error inesperado', parent = self.frame_nuevo_usario)
         else:
             if not self.campos_vacios(dni, nombre, usuario, clave1, clave2):
-                messagebox.showerror(title='Mensaje', message='Hay campos Vacios')
+                messagebox.showerror(title='Mensaje', message='Hay campos Vacios', parent = self.frame_nuevo_usario)
             elif not valid_user.comprobar_dni(dni):
-                messagebox.showerror(title='Mensajes', message='Usuario ya existe')
+                messagebox.showerror(title='Mensajes', message='Usuario ya existe', parent = self.frame_nuevo_usario)
             elif not valid_user.clave_iguales(clave1, clave2):
-                messagebox.showerror(title='Mensaje', message='Contraseñas no coinciden')
+                messagebox.showerror(title='Mensaje', message='Contraseñas no coinciden', parent = self.frame_nuevo_usario)
             elif not valid_user.comprobar_usuario(usuario):
-                messagebox.showerror(title='Mensaje', message='Usuario exixtente')
+                messagebox.showerror(title='Mensaje', message='Usuario exixtente', parent = self.frame_nuevo_usario)
                
     def campos_vacios(self, dni, nombre, usuario, clave1, clave2):
         return True if len(dni) != 0 and len(nombre) != 0 and len(usuario) != 0 and clave1 != 0 and clave2 !=0 else False

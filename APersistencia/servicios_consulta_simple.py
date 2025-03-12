@@ -22,8 +22,8 @@ class ServiciosConsultaSimple(Consulta):
         registros = self.consulta_simple('venta')
 
         for i in registros:
-            id, precio, fecha, moneda, dni_usuario = i
-            ventas.append(modelos.Ventas(id, precio, fecha, moneda, dni_usuario))
+            id, precio, fecha, moneda, hora = i
+            ventas.append(modelos.Ventas(id, precio, fecha, moneda, hora))
 
         return ventas
 
@@ -41,11 +41,11 @@ class ServiciosConsultaSimple(Consulta):
     def monedas(self):
         monedas = []
 
-        registros = self.consulta_simple('moneda')
+        registros = self.consulta_simple('monedas')
 
         for i in registros:
-            nombre, valor = i
-            monedas.append(modelos.Monedas(nombre, valor))
+            nombre, valor, simbolo = i
+            monedas.append(modelos.Monedas(nombre, valor, simbolo))
 
         return monedas
 

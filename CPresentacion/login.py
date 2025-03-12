@@ -60,8 +60,6 @@ class Login(tk.Frame):
         self.boton_registro.pack(ipady=4)
     
     def login_in(self):
-        self.mostrar_principal('Pedro')
-        '''
         usuario = self.entry_usuario.get()
         clave = self.entry_clave.get()
         validar = UsuarioValid()
@@ -78,7 +76,7 @@ class Login(tk.Frame):
             self.mostrar_PuntoVenta(usuario)
         elif comprobante == 2:
             self.mostrar_principal(usuario)
-            '''
+
         
          
         

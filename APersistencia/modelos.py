@@ -9,14 +9,12 @@ class Categorias:
 
 
 class Monedas:
-    def __init__(self, nombre, valor):
+    def __init__(self, nombre, valor, simbolo):
         self.nombre = nombre
         self.valor = valor
+        self.simbolo = simbolo
     
-    def print(self):
-        print(f"{self.nombre} {self.valor}")
-
-
+    
 class Producto_venta:
     def __init__(self, id_producto, id_venta, cantidad, precio_unitario ):
         self.id_producto = id_producto
@@ -66,12 +64,10 @@ class Usuarios:
         
 
 class Ventas:
-    def __init__(self, id_venta, precio_total, fecha, moneda, dni_usuario):
+    def __init__(self, id_venta, precio_total, fecha, moneda, hora):
         self.id_venta = id_venta
         self.precio_total = precio_total
         self.fecha = fecha
         self.moneda = moneda
-        self.dni_usario = dni_usuario
+        self.hora = hora
 
-    def print(self):
-        print(f'{self.id_venta} {self.precio_total} {self.fecha} {self.moneda} {self.dni_usario}')

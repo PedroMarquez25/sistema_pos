@@ -12,8 +12,8 @@ class Window(tk.Tk):
         super().__init__()
         self.config_window()
 
-        self.frame_principal = Principal(self, self.mostrar_login, self.mostrar_PuntoVenta, '---')
-        self.frame_puntoVenta = PuntoVenta(self, self.mostrar_login, '---')
+        self.frame_principal = Principal(self, self.mostrar_login, self.mostrar_PuntoVenta, 'imagenes/sinfoto.jpg')
+        self.frame_puntoVenta = PuntoVenta(self, self.mostrar_login, 'imagenes/sinfoto.jpg', self.mostrar_principal)
         self.frame_registro = Registro(self,self.mostrar_login)
 
         self.mostrar_login()
@@ -42,7 +42,7 @@ class Window(tk.Tk):
         self.frame_registro.destroy()
         self.frame_principal.destroy()
 
-        self.frame_puntoVenta = PuntoVenta(self, self.mostrar_login, usuario)
+        self.frame_puntoVenta = PuntoVenta(self, self.mostrar_login, usuario, self.mostrar_principal)
 
 
 

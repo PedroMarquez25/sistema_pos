@@ -12,6 +12,12 @@ from CPresentacion.inventario.principal_inv_buscar import InventarioBuscar
 from CPresentacion.inventario.principal_inv_categoira import InventarioCatalogo
 #usuarios
 from CPresentacion.usuarios.consultar_usuario import UsuarioConsulta
+from CPresentacion.usuarios.registrar_usuario import UsuariosRegistrar
+
+from CPresentacion.ventas.consultar_venta import VentasConsulta
+from CPresentacion.home import Home
+
+from BDominio.usuarios.cargar_usuarios import CargarUsuario
 
 class Principal(tk.Frame):
     def __init__(self, parent, mostrar_login, mostrar_PuntoVenta, usuario):
@@ -29,6 +35,7 @@ class Principal(tk.Frame):
         self.widgets_panel_izquierdo()
 
 
+
     def paneles(self):
         self.barra_superior = tk.Frame(self, bg=colores.COLOR_SEGUNDARIO, height=60)
         self.barra_superior.pack(side=tk.TOP, fill=tk.X)
@@ -38,10 +45,11 @@ class Principal(tk.Frame):
 
         self.cuerpo = tk.Frame(self, background=colores.FONDO_PRINCIPAL, bd=2)
         self.cuerpo.pack(side=tk.RIGHT, fill='both' ,expand=True)
+
         
     def widgets_barra_superior(self):
         self.icono = tk.Button(self.barra_superior, text= '\uf0c9', font=self.font_awesome,
-                               command=self.toggle_panel)
+                               )
         self.icono.config(bg=colores.COLOR_SEGUNDARIO, fg=colores.COLOR_TEXTO, bd=0)
         self.icono.pack(side=tk.LEFT, padx=5)
 
@@ -50,8 +58,11 @@ class Principal(tk.Frame):
         self.lbl_nombre.pack(side=tk.LEFT)
 
         #====================crear imagen de perfil con un canvas================
-
-        self.imagen = leer_imagen("c:/Users/pedro/OneDrive/Pictures/fot.jpg", (50,40))
+        cargar_ima = CargarUsuario()
+        try:
+            self.imagen = leer_imagen(cargar_ima.Cargar_imagen(self.usuario), (50,40))
+        except  Exception as e:
+             self.imagen = leer_imagen('imagenes/sinfoto.jpg', (50,50))
 
         self.button_perfil = tk.Button(self.barra_superior, image=self.imagen, borderwidth=0, highlightthickness=0)
         self.button_perfil.pack(side=tk.RIGHT, padx= 10, pady=10)
@@ -64,7 +75,7 @@ class Principal(tk.Frame):
 
         #================Boton de notificaciones==================================
         self.button_notify = tk.Button(self.barra_superior, text="\uf0f3", font=self.font_awesome,
-                                       command=self.notify)
+                                       )
         self.button_notify.config(bg=colores.COLOR_SEGUNDARIO, fg=colores.COLOR_TEXTO, bd=0)
         self.button_notify.pack(side=tk.RIGHT, padx = 5)
 
@@ -78,7 +89,8 @@ class Principal(tk.Frame):
         self.btn_cerrar_turno.pack(side=tk.TOP, pady=pad, ipady=5)
                                          
         #======================================Home=========================================================
-        self.btn_home = tk.Button(self.panel_izquierdo, text="   \uf015 Home", height=alto, width=ancho, bd=0)
+        self.btn_home = tk.Button(self.panel_izquierdo, text="   \uf015 Home", height=alto, width=ancho, bd=0,
+                                  command=self.home)
         self.btn_home.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
         self.btn_home.pack(side=tk.TOP, pady=pad, ipady=ipad)
 
@@ -113,13 +125,10 @@ class Principal(tk.Frame):
         lbl_ventas.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=('regular',11), anchor='w')
         lbl_ventas.pack(side=tk.TOP, pady=pad, ipady=4)
 
-        self.btn_lista_ventas = tk.Button(self.panel_izquierdo, text='   \uf07a Lista de ventas', height=alto, width=ancho, bd=0)
+        self.btn_lista_ventas = tk.Button(self.panel_izquierdo, text='   \uf07a Lista de ventas', height=alto, width=ancho, bd=0,
+                                          command=self.lista_venta)
         self.btn_lista_ventas.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
         self.btn_lista_ventas.pack(side=tk.TOP, pady=pad, ipady=ipad)
-
-        self.btn_buscar_venta = tk.Button(self.panel_izquierdo, text="   \uf002 Buscar venta", height=alto, width=ancho, bd=0)
-        self.btn_buscar_venta.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
-        self.btn_buscar_venta.pack(side=tk.TOP, pady=pad, ipady=ipad)
 
         #=====================================Usuarios========================================================================
         lbl_usuario = tk.Label(self.panel_izquierdo,text='Usuarios', height=alto, width=ancho, bd=0)
@@ -131,13 +140,10 @@ class Principal(tk.Frame):
         self.btn_consulta_usuario.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
         self.btn_consulta_usuario.pack(side=tk.TOP, pady=pad, ipady=ipad)
         
-        self.btn_registrar_usuario = tk.Button(self.panel_izquierdo, text="   \uf234 Registar", height=alto, width=ancho, bd=0)
+        self.btn_registrar_usuario = tk.Button(self.panel_izquierdo, text="   \uf234 Registar", height=alto, width=ancho, bd=0,
+                                            command=self.registrar_usuario)
         self.btn_registrar_usuario.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
         self.btn_registrar_usuario.pack(side=tk.TOP, pady=pad, ipady=ipad)
-
-        self.btn_modificar_acceso = tk.Button(self.panel_izquierdo, text="   \uf044 Modificar acceso", height=alto, width=ancho, bd=0)
-        self.btn_modificar_acceso.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
-        self.btn_modificar_acceso.pack(side=tk.TOP, pady=pad, ipady=ipad)
 
         self.btn_punto_venta = tk.Button(self.panel_izquierdo, text='Punto de venta \uf061', width=ancho, height=alto, bd=1,
                                          command=self.abrir_pos)
@@ -187,6 +193,19 @@ class Principal(tk.Frame):
     #Usuarios
     def usuario_consulta(self):
         self.clear_body()
-        UsuarioConsulta(self.cuerpo)
+        UsuarioConsulta(self.cuerpo, self.registrar_usuario)
+
+    def registrar_usuario(self):
+        self.clear_body()
+        UsuariosRegistrar(self.cuerpo)
+    
+    def lista_venta(self):
+        self.clear_body()
+        VentasConsulta(self.cuerpo)
+
+    def home(self):
+        self.clear_body()
+        Home(self.cuerpo)
+
 
 

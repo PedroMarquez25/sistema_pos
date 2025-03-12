@@ -11,6 +11,7 @@ class InventarioRegistrar(tk.Frame):
         super().__init__(parent)
         self.config(background=color.FONDO_SEGUNDARIO)
         self.pack(fill='both', expand=True ,padx=5, pady=5)
+        self.imagen_perfil_sinfoto = 'imagenes/sinfoto.jpg'
 
         self.categoria = DatosCategoria()
         self.categorias = self.categoria.Datos_categoria()
@@ -18,7 +19,7 @@ class InventarioRegistrar(tk.Frame):
 
     def crear_widgets(self):
         font_awesome = font.Font(family="Font Awesome" ,size=15)
-        pax, pay, ix, iy = 35, 10, 70, 8
+        pax, pay, ix, iy = 30, 5, 60, 6
 
         lbl_inventario = tk.Label(self, text='Inventario/registro', bg='white').place(x=5, y=5)
         lbl = tk.Label(self, text="Registrar productos \uf0fe", font=font_awesome, bg=color.FONDO_SEGUNDARIO)
@@ -32,30 +33,27 @@ class InventarioRegistrar(tk.Frame):
         lbl_informacion_general = tk.Label(self.formulario, text='Informacion general', font='roboto 12 bold', bg=color.FONDO_SEGUNDARIO)
         lbl_informacion_general.grid(row=0,column=0,pady=10 ,sticky=tk.W)
 
-        lbl_ingrese_datos = tk.Label(self.formulario, text='Ingrese los datos del producto', font='roboto 11', bg=color.FONDO_SEGUNDARIO)
-        lbl_ingrese_datos.grid(row=1,column=0, padx=30,pady=pay ,sticky=tk.W)
-
         #descripcion
         lbl_descripcion = tk.Label(self.formulario, text='Descripcion', font='roboto 12', bg=color.FONDO_SEGUNDARIO)
         lbl_descripcion.grid(row=2,column=0, padx=pax, pady=pay, sticky=tk.W)
         self.entry_descripcion = ttk.Entry(self.formulario, font='roboto 12')
-        self.entry_descripcion.grid(row=3, column=0, padx=pax , pady=pay, ipadx=ix, ipady=iy)
+        self.entry_descripcion.grid(row=2, column=1, padx=pax , pady=pay, ipadx=ix, ipady=iy)
 
         #Categorias
         lbl_categoria = tk.Label(self.formulario, text='Categoria', font='roboto 12', bg=color.FONDO_SEGUNDARIO)
-        lbl_categoria.grid(row=2,column=1, padx=pax, pady=pay, sticky=tk.W)
+        lbl_categoria.grid(row=3,column=0, padx=pax, pady=pay, sticky=tk.W)
         self.entry_categoria = ttk.Combobox(self.formulario, font='roboto 12', values=self.categorias)
-        self.entry_categoria.grid(row=3, column=1, padx=pax, pady=pay, ipadx=65, ipady=iy)
+        self.entry_categoria.grid(row=3, column=1, padx=pax, pady=pay, ipadx=50, ipady=iy)
 
         #Cantidad
         lbl_cantidad = tk.Label(self.formulario, text='Cantidad', font='roboto 12', bg=color.FONDO_SEGUNDARIO)
         lbl_cantidad.grid(row=4,column=0, padx=pax, pady=pay, sticky=tk.W)
         self.entry_cantidad = ttk.Entry(self.formulario, font='roboto 12')
-        self.entry_cantidad.grid(row=5, column=0, padx=pax, pady=pay, ipadx=ix, ipady=iy)
+        self.entry_cantidad.grid(row=4, column=1, padx=pax, pady=pay, ipadx=ix, ipady=iy)
 
         #precio
         lbl_precio = tk.Label(self.formulario, text='Precio', font='roboto 12', bg=color.FONDO_SEGUNDARIO)
-        lbl_precio.grid(row=4,column=1, padx=pax, pady=pay, sticky=tk.W)
+        lbl_precio.grid(row=5,column=0, padx=pax, pady=pay, sticky=tk.W)
         self.entry_precio = ttk.Entry(self.formulario, font='roboto 12')
         self.entry_precio.grid(row=5, column=1, padx=pax, pady=pay, ipadx=ix, ipady=iy)
 
@@ -63,14 +61,17 @@ class InventarioRegistrar(tk.Frame):
         lbl_fecha_vencimieto = tk.Label(self.formulario, text='Fecha vencimieto', font='roboto 12', bg=color.FONDO_SEGUNDARIO)
         lbl_fecha_vencimieto.grid(row=6,column=0, padx=pax, pady=pay, sticky=tk.W)
         self.entry_fecha_vencimieto = ttk.Entry(self.formulario, font='roboto 12')
-        self.entry_fecha_vencimieto.grid(row=7, column=0, padx=pax, pady=pay, ipadx=ix, ipady=iy)
+        self.entry_fecha_vencimieto.grid(row=6, column=1, padx=pax, pady=pay, ipadx=ix, ipady=iy)
 
         #cargar imagen
         lbl_Cargar_imagen = tk.Label(self.formulario, text='Cargar imagen', font='roboto 12', bg=color.FONDO_SEGUNDARIO)
-        lbl_Cargar_imagen.grid(row=6,column=1, padx=pax, pady=pay, sticky=tk.W)
-        self.Cargar_imagen = ttk.Entry(self.formulario, font='roboto 12')
-        self.Cargar_imagen.grid(row=7, column=1, padx=pax, pady=pay, ipadx=20, ipady=iy, sticky=tk.W)
-        self.Cargar_imagen.config(state=tk.DISABLED)
+        lbl_Cargar_imagen.grid(row=7,column=0, padx=pax, pady=pay, sticky=tk.W)
+
+        self.Cargar_imagen = tk.Label(self.formulario)
+        self.Cargar_imagen.grid(row=7, column=1, padx=pax, pady=pay, sticky=tk.W)
+        imag = leer_imagen(self.imagen_perfil_sinfoto, (120, 120))
+        self.Cargar_imagen.config(image = imag)
+        self.Cargar_imagen.image = imag
 
         #botones
         self.boton_cargar = tk.Button(self.formulario, text='Cargar', font='roboto 12',bg=color.BOTON_PRODUCTOS, 
@@ -91,13 +92,11 @@ class InventarioRegistrar(tk.Frame):
         cantidad = self.entry_cantidad.get()
         precio = self.entry_precio.get()
         fecha_ven = self.entry_fecha_vencimieto.get()
-        imagen = self.Cargar_imagen.get()
+        imagen = self.imagen_perfil_sinfoto
 
         if len(fecha_ven) == 0:
             fecha_ven = '0'
 
-        if len(imagen) == 0:
-            imagen = 'imagenes/sinfoto.jpg'
             
         
         if len(descripcion) == 0 or len(categoria) == 0 or len(cantidad) == 0 or len(precio) == 0:
@@ -118,9 +117,10 @@ class InventarioRegistrar(tk.Frame):
     def load_imagen(self):
         file_path = filedialog.askopenfilename() #abre cuadro de dialogo
         if file_path:
-             self.Cargar_imagen.config(state=tk.NORMAL)
-             self.Cargar_imagen.insert(0,file_path)
-             self.Cargar_imagen.config(state=tk.DISABLED)
+             imag = leer_imagen(file_path, (120,120))
+             self.Cargar_imagen.image = imag
+             self.Cargar_imagen.config(image=imag)
+             self.imagen_perfil_sinfoto = file_path
 
     def limpiar_campos(self):
         self.entry_descripcion.delete(0, 'end')
@@ -128,9 +128,10 @@ class InventarioRegistrar(tk.Frame):
         self.entry_cantidad.delete(0, 'end')
         self.entry_precio.delete(0, 'end')
         self.entry_fecha_vencimieto.delete(0, 'end')
-        self.Cargar_imagen.config(state=tk.NORMAL)
-        self.Cargar_imagen.delete(0, 'end')
-        self.Cargar_imagen.config(state=tk.DISABLED)
+        self.imagen_perfil_sinfoto = 'imagenes/sinfoto.jpg'
+        imag = leer_imagen(self.imagen_perfil_sinfoto, (120, 120))
+        self.Cargar_imagen.config(image=imag)
+        self.Cargar_imagen.image = imag
 
 
         

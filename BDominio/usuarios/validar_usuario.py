@@ -15,6 +15,11 @@ class UsuarioValid:
                 break
 
         return retorno
+    
+    def acceso(self, usuario):
+        for i in self.usuarios:
+            if i.usuario == usuario:
+                return i.acceso
 
     def clave_iguales(self, clave1, clave2):
         return True if clave2 == clave1 else False

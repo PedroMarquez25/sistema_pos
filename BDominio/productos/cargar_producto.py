@@ -22,6 +22,16 @@ class CargarProductos():
                          'fecha' : producto.fecha_vencimiento})
         return data
     
+    def cargar_productos_activos(self):
+        data = []
+        for producto in self.productos:
+            if producto.estado and producto.cantidad > 0:
+                data.append({"id" : producto.id_producto, 'desc' : producto.descripcion, 'precio' : producto.precio, 'cantidad' : producto.cantidad, 
+                         'categoria': self.categoria.nombre_categoria(producto.id_categoria), 'estado' : producto.estado, 'imagen' : producto.imagen,
+                         'fecha' : producto.fecha_vencimiento})
+        return data
+
+    
     def buscar_producto_id(self, id):
         try:
             id = int(id)
@@ -35,10 +45,32 @@ class CargarProductos():
                             'fecha' : producto.fecha_vencimiento}]
         return busqueda
     
+    def buscar_producto_id_activo(self, id):
+        try:
+            id = int(id)
+        except ValueError:
+            return False
+        busqueda = []
+        for producto in self.productos:
+            if producto.id_producto == id and producto.estado:
+                busqueda = [{"id" : producto.id_producto, 'desc' : producto.descripcion, 'precio' : producto.precio, 'cantidad' : producto.cantidad, 
+                             'categoria': self.categoria.nombre_categoria(producto.id_categoria), 'estado' : producto.estado, 'imagen' : producto.imagen,
+                            'fecha' : producto.fecha_vencimiento}]
+        return busqueda
+    
     def buscar_producto_desc(self, desc):
         busqueda = []
         for producto in self.productos:
             if self.contiene_patron(producto.descripcion, desc):
+                busqueda.append({"id" : producto.id_producto, 'desc' : producto.descripcion, 'precio' : producto.precio, 'cantidad' : producto.cantidad, 
+                             'categoria': self.categoria.nombre_categoria(producto.id_categoria), 'estado' : producto.estado, 'imagen' : producto.imagen,
+                            'fecha' : producto.fecha_vencimiento})
+        return busqueda
+    
+    def buscar_producto_desc_activo(self, desc):
+        busqueda = []
+        for producto in self.productos:
+            if self.contiene_patron(producto.descripcion, desc) and producto.estado:
                 busqueda.append({"id" : producto.id_producto, 'desc' : producto.descripcion, 'precio' : producto.precio, 'cantidad' : producto.cantidad, 
                              'categoria': self.categoria.nombre_categoria(producto.id_categoria), 'estado' : producto.estado, 'imagen' : producto.imagen,
                             'fecha' : producto.fecha_vencimiento})
@@ -62,5 +94,10 @@ class CargarProductos():
                          'categoria': self.categoria.nombre_categoria(producto.id_categoria), 'estado' : producto.estado, 'imagen' : producto.imagen,
                          'fecha' : producto.fecha_vencimiento})
         return data
+    
+    def nombre_producto(self, id):
+        for producto in self.productos:
+            if producto.id_producto == id:
+                return producto.descripcion
 
     

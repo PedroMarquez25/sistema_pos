@@ -139,18 +139,18 @@ class EditarProductoTop(tk.Toplevel):
         
 
          if not self.campos_vacios(descripcrion, precio, cantidad, fecha):
-            messagebox.showerror(title='Mensaje', message='Campos vacios')
+            messagebox.showerror(title='Mensaje', message='Campos vacios', parent = self)
             return
          
          editar = EditarProducto()
 
-         if messagebox.askretrycancel('Editar producto', '¿Quieres guardar los cambios?'): 
+         if messagebox.askretrycancel('Editar producto', '¿Quieres guardar los cambios?', parent = self): 
             if editar.editar_producto(id, descripcrion, precio, cantidad, fecha, categoria, imagen, estado):
-                 messagebox.showinfo('Mensaje', 'Cambios guardados correctamente')
+                 messagebox.showinfo('Mensaje', 'Cambios guardados correctamente', parent = self)
                  self.destroy()
                  self.actualizar_lista()
             else:
-                 messagebox.showwarning('Error', 'A ocurrido un error inesperado')
+                 messagebox.showwarning('Error', 'A ocurrido un error inesperado', parent = self)
                  
     def campos_vacios(self, desc, pre, cant, fecha):
          if len(desc) != 0 and len(pre) != 0 and len(cant) != 0 and len(fecha) != 0:

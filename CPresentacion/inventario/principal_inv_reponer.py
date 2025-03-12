@@ -78,17 +78,17 @@ class ReponerProductoTop(tk.Toplevel):
 
     def guardar_cambios(self):      
          if len(self.entry_cantidad_reponer.get()) == 0:
-            messagebox.showerror('Error', 'Campo reponer vacio')
+            messagebox.showerror('Error', 'Campo reponer vacio', parent = self)
             return 0
          
          cantidad = self.entry_cantidad_reponer.get()
 
          editar = EditarProducto()
 
-         if messagebox.askretrycancel('Reponer producto', '¿Quieres guardar los cambios?'): 
+         if messagebox.askretrycancel('Reponer producto', '¿Quieres guardar los cambios?', parent = self): 
             if editar.reponer_producto(self.producto['id'], cantidad):
-                 messagebox.showinfo('Mensaje', 'Cambios guardados correctamente')
+                 messagebox.showinfo('Mensaje', 'Cambios guardados correctamente', parent = self)
                  self.destroy()
                  self.actualizar_lista()
             else:
-                 messagebox.showwarning('Error', 'Datos incopatibles')
+                 messagebox.showwarning('Error', 'Datos incopatibles', parent = self)

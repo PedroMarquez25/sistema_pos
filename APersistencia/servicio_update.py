@@ -8,9 +8,9 @@ class ServicioUpdate(Conexion):
         sql = 'update categorias set descripcion = %s, imagen = %s where id_categoria = %s'
         self.cursor.execute(sql, (desc, img, id))
         self.conexion.commit()
-    def update_moneda(self, nombre, valor):
-        sql = 'update monedas set valor = %s where nombre = %s'
-        self.cursor.execute(sql, (valor, nombre))
+    def update_moneda(self, nombre, valor, simbolo):
+        sql = 'update monedas set valor = %s, simbolo = %s where nombre = %s'
+        self.cursor.execute(sql, (valor, nombre, simbolo))
         self.conexion.commit()
     def update_producto(self, id, desc, precio, cant, fecha_ven, id_categoria, imagen, estado):
         sql = 'update productos set descripcion = %s, precio = %s, cantidad = %s, fecha_vencimiento = %s, id_categoria = %s, imagen = %s, estado = %s where id_producto = %s'
@@ -24,5 +24,10 @@ class ServicioUpdate(Conexion):
 
     def reponer_producto(self, id, cantidad):
         sql = 'update productos set cantidad = cantidad + %s where id_producto = %s'
+        self.cursor.execute(sql, (cantidad, id))
+        self.conexion.commit()
+
+    def disminuir_producto(self, id, cantidad):
+        sql = 'update productos set cantidad = cantidad - %s where id_producto = %s'
         self.cursor.execute(sql, (cantidad, id))
         self.conexion.commit()

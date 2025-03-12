@@ -21,16 +21,15 @@ class Registrar(Conexion):
 
         self.guardar_datos(sql, datos)
    
-    def registrar_moneda(self, nombre, valor):
-        datos = (nombre, valor)
-        sql = 'insert into monedas(nombre, valor) values(%s, %s)'
+    def registrar_moneda(self, nombre, valor, simbolo):
+        datos = (nombre, valor, simbolo)
+        sql = 'insert into monedas(nombre, valor) values(%s, %s, %s)'
 
         self.guardar_datos(sql, datos)
     
     def registrar_producto_venta(self, id_producto, id_venta, cantidad, precio_unitario):
         datos = (id_producto, id_venta, cantidad, precio_unitario)
         sql = 'insert into producto_venta(id_producto, id_venta, cantidad, precio_unitario) values(%s, %s, %s, %s)'
-
         self.guardar_datos(sql, datos)
 
     def registrar_telf_usuario(self, telefono, dni):
@@ -42,12 +41,10 @@ class Registrar(Conexion):
     def registrar_usuario(self, dni, nombre, usuario, clave, rol, acceso, imagen):
         datos = (dni, nombre, usuario, clave, rol, acceso, imagen)
         sql = 'insert into usuarios(dni, nombre, usuario, clave, rol, acceso, imagen) values(%s,%s,%s,%s,%s,%s,%s)'
-
         self.guardar_datos(sql,datos)
 
-    def registar_venta(self, precio_total, fecha, moneda, dni_usuario):
-        datos = (precio_total, fecha, moneda, dni_usuario)
-        sql = 'insert into ventas(precio_total, fecha, moneda, dni_usuario) values(%s, %s, %s, %s)'
-
+    def registar_venta(self, precio_total, fecha, moneda, hora):
+        datos = (precio_total, fecha, moneda, hora)
+        sql = 'insert into ventas(precio_total, fecha, moneda, hora) values(%s, %s, %s, %s)'
         self.guardar_datos(sql, datos)
         

@@ -38,6 +38,14 @@ class EditarProducto():
         
         return True
 
+    def disminuir_producto(self, datos):
+        try:
+            for producto in datos:
+                self.Editar.disminuir_producto(producto['id'], producto['cantidad'])
+        except Exception as e:
+            print('error al actualizar cantidad')
+            return False
+        return True
 
 
           

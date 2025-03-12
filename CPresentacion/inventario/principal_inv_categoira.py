@@ -266,17 +266,17 @@ class InventarioCatalogo(tk.Frame):
         imagen = self.imagen_edit
 
         if len(descripcion) == 0:
-            messagebox.showerror('Error', 'Campos vacios')
+            messagebox.showerror('Error', 'Campos vacios', parent = self.editar)
             return
 
-        if messagebox.askokcancel('Mensaje', '¿Editar categoria?'):
+        if messagebox.askokcancel('Mensaje', '¿Editar categoria?', parent = self.editar):
             actualizar = EditarCategoria()
             if actualizar.actualizar_categoria(id, descripcion, imagen):
-                messagebox.showinfo('Mensaje', 'Categoria actualizada')
+                messagebox.showinfo('Mensaje', 'Categoria actualizada', parent = self.editar)
                 self.editar.destroy()
                 self.update_categoria()
             else:
-                messagebox.showerror('Error', 'No se pudo actualizar') 
+                messagebox.showerror('Error', 'No se pudo actualizar', parent = self.editar) 
 
     def load_imagen(self, edit = False):
         file_path = filedialog.askopenfilename()
