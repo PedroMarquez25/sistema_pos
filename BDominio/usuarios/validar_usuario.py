@@ -5,7 +5,6 @@ class UsuarioValid:
          self.consulta = ServiciosConsultaSimple()
          self.usuarios = self.consulta.usuarios()
         
-    #verificar acceso para entrar en la aplicacion
     def validar(self, usuario, clave):   
         retorno = 0
         

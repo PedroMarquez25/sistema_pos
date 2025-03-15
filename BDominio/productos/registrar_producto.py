@@ -1,4 +1,5 @@
 from APersistencia.servicio_registro import Registrar
+
 from BDominio.productos.categorias_datos import DatosCategoria
 
 class RegistrarProducto():

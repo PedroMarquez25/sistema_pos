@@ -1,12 +1,15 @@
 import tkinter as tk
 import config as color
 
-from BDominio.productos.cargar_producto import CargarProductos
 from tkinter import ttk, messagebox, font
-from util.util_imagenes import leer_imagen
-from BDominio.productos.eliminar_producto import EliminarProducto
+
 from CPresentacion.inventario.principal_inv_editar import EditarProductoTop
 from CPresentacion.inventario.principal_inv_reponer import ReponerProductoTop
+
+from BDominio.productos.eliminar_producto import EliminarProducto
+from BDominio.productos.cargar_producto import CargarProductos
+
+from util.util_imagenes import leer_imagen
 
 class InventarioConsulta(tk.Frame):
     def __init__(self, parent, inventario_registrar):
@@ -67,7 +70,6 @@ class InventarioConsulta(tk.Frame):
     
     def populate_list(self):
         font_awesome = font.Font(family="Font Awesome 6 Free Solid" ,size=15)
-        #Datos de productos
         productos = CargarProductos()
         data = productos.cargar_datos_consulta()
 
@@ -89,9 +91,8 @@ class InventarioConsulta(tk.Frame):
             except Exception as e:
                 image = leer_imagen('imagenes/sinfoto.jpg', (100, 100))
 
-            if image:
-                img_label.config(image=image)
-                img_label.image = image
+            img_label.config(image=image)
+            img_label.image = image
             
             tk.Label(row_frame, text=item['id'], width=15, anchor='center', bg=c).pack(side='left', padx=5)
             tk.Label(row_frame, text=f"{item['desc']}", width=20, anchor='center', bg=c).pack(side='left', padx=5)
@@ -114,7 +115,7 @@ class InventarioConsulta(tk.Frame):
 
     def delete_item(self, item, frame):
         delete = EliminarProducto()
-        if messagebox.askokcancel(title='Eliminar producto', message='¿Quieres eliminar el producto?'):
+        if messagebox.askyesno(title='Eliminar producto', message='¿Quieres eliminar el producto?'):
             if delete.delete_producto(item['id']):
                 messagebox.showinfo(title='Mensaje', message='Se elimino el producto correctamente')
                 frame.destroy()

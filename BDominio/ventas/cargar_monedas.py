@@ -9,7 +9,6 @@ class CargarMoneda():
         for moneda in self.consultar.monedas():
             data.append({'nombre' : moneda.nombre, 'valor' : moneda.valor, 'simbolo' : moneda.simbolo})
         return data
-    
 
     def cargar_nombres_monedas(self):
         data = []

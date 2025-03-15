@@ -1,18 +1,15 @@
 import tkinter as tk
 import config as color
 
-from BDominio.productos.cargar_producto import CargarProductos  #cargar datos de productos
 from tkinter import ttk, messagebox, font, filedialog
-from util.util_imagenes import leer_imagen
-from BDominio.productos.eliminar_producto import EliminarProducto #eliminar producto
 
-from CPresentacion.inventario.principal_inv_editar import EditarProductoTop #editar producto
 from CPresentacion.inventario.principal_inv_categ_producto import CategoriaProductoTop
 
 from BDominio.productos.categorias_datos import DatosCategoria
 from BDominio.productos.eliminar_categoria import EliminarCategoria
 from BDominio.productos.registrar_categoria import RegistrarCategoria
 from BDominio.productos.editar_categoria import EditarCategoria
+from BDominio.productos.cargar_producto import CargarProductos  #cargar datos de productos
 
 from util.util_imagenes import leer_imagen
 from util.util_ventana import centrar_ventana
@@ -24,7 +21,7 @@ class InventarioCatalogo(tk.Frame):
         self.pack(fill='both', expand=True ,padx=5, pady=5)
         self.productos = CargarProductos()
 
-        self.imagen_registro = ''
+        self.imagen_registro = 'imagenes/sinfoto.jpg'
         self.imagen_edit = 'imagenes/sinfoto.jpg'
 
         self.create_widget()
@@ -48,7 +45,6 @@ class InventarioCatalogo(tk.Frame):
         container = tk.Frame(self, bd=0.5)
         container.place(x=150, y=120, height=450, width=800)
 
-        # Crear encabezados
         header_frame = tk.Frame(container, bg=color.BOTON_PRODUCTOS)
         header_frame.pack(fill='x')
         
@@ -90,14 +86,11 @@ class InventarioCatalogo(tk.Frame):
             
             try:
                 image = leer_imagen(item['imagen'], (100,100))
-                self.imagen_registro = item['imagen']
             except Exception as e:
                 image = leer_imagen('imagenes/sinfoto.jpg', (100, 100))
-                self.imagen_registro = 'imagenes/sinfoto.jpg'
             
-            if image:
-                img_label.config(image=image)
-                img_label.image = image
+            img_label.config(image=image)
+            img_label.image = image
             
             tk.Label(row_frame, text=item['id'], width=20, anchor='center', bg=c).pack(side='left', padx=5)
             tk.Label(row_frame, text=item['descripcion'], width=20, anchor='center', bg=c).pack(side='left', padx=5)
@@ -110,9 +103,8 @@ class InventarioCatalogo(tk.Frame):
             tk.Button(row_frame, text="\uf1f8",font=font_awesome, width=5, bg=color.BOTON_PRODUCTOS, bd = 0,
                       command=lambda i=item, f=row_frame: self.delete_categoria(i, f)).pack(side='left', padx=10)
     
-
     def delete_categoria(self, item, frame):
-        if messagebox.askokcancel('Mensaje', '¿Eliminar producto? \n si elimina la categoria todos los productos de esta seran eliminados') :
+        if messagebox.askokcancel('Mensaje', '¿Eliminar producto? \n Se eliminaran todos los productos de esta categoria') :
             eliminar = EliminarCategoria()
             if eliminar.eliminar_categoria(item['id']):
                 messagebox.showinfo('Mensaje', 'Producto eliminado correctamente')
@@ -122,14 +114,11 @@ class InventarioCatalogo(tk.Frame):
 
     def registrar_categoria(self):
          self.registrar = tk.Toplevel(self)
-
          self.registrar.title('Editar Producto')
          self.registrar.geometry((centrar_ventana(self.registrar, 450, 600)))
          self.registrar.resizable(0, 0)
          self.registrar.grab_set()
          self.registrar.config(bg=color.FONDO_SEGUNDARIO)
-
-
          font_awesome = font.Font(family="Font Awesome " ,size=15)
 
          #=============================titulo======================================================
@@ -147,17 +136,15 @@ class InventarioCatalogo(tk.Frame):
 
          self.imagen = tk.Label(self.frame_formulario,  background=color.FONDO_PRINCIPAL)
          self.imagen.grid(row=0, column=1, padx=15, pady=5)
-
-         try: 
-            image = leer_imagen('imagenes/sinfoto.jpg', (120, 120))
+        
+         try:
+             image = leer_imagen('imagenes/sinfoto.jpg', (120, 120))
          except Exception as e:
-            print('error a cargar la imagen de prueba')
+             messagebox.showerror('Error no se pudo cargar la imagen predefinida')
 
-         if image:
-                self.imagen.config(image=image)
-                self.imagen.image = image
+         self.imagen.config(image=image)
+         self.imagen.image = image
 
-         
          self.button_imagen = tk.Button(self.frame_formulario, text='Cargar', font=('roboto', 12), bg=color.BOTON_PRODUCTOS,
                                     command=self.load_imagen)
          self.button_imagen.grid(row=1, column=1, ipadx=6, ipady=2)
@@ -185,10 +172,9 @@ class InventarioCatalogo(tk.Frame):
             messagebox.showerror('Error', 'Campo de texto vacio')
             return
         
-        if messagebox.askokcancel('Mensaje', '¿Registrar categoria?'):
+        if messagebox.askyesno('Mensaje', '¿Registrar categoria?'):
             registrar = RegistrarCategoria()
-            confirmacion = registrar.registrar_categoria(descripcion, imagen)
-            if confirmacion:
+            if registrar.registrar_categoria(descripcion, imagen):
                 messagebox.showinfo('Mensaje', 'Categoria registrada correctamente')
                 self.registrar.destroy()
                 self.update_categoria()
@@ -197,13 +183,11 @@ class InventarioCatalogo(tk.Frame):
 
     def editar_categoria(self, item):
          self.editar = tk.Toplevel(self)
-
          self.editar.title('Editar Producto')
          self.editar.geometry((centrar_ventana(self.editar, 450, 600)))
          self.editar.resizable(0, 0)
          self.editar.grab_set()
          self.editar.config(bg=color.FONDO_SEGUNDARIO)
-
 
          font_awesome = font.Font(family="Font Awesome " ,size=15)
 
@@ -224,11 +208,12 @@ class InventarioCatalogo(tk.Frame):
          self.imag.grid(row=0, column=1, padx=15, pady=5)
 
          try: 
-            img = leer_imagen(item['imagen'], (120, 120))
-            self.imag.config(image=img)
-            self.imag.image = img
+            img = leer_imagen(item['imagen'], (120, 120))     
          except Exception as e:
-            print('error a cargar la imagen de prueba')
+             img = leer_imagen('imagenes/sinfoto.jpg', (120, 120))
+            
+         self.imag.config(image=img)
+         self.imag.image = img
          
          self.button_imag = tk.Button(self.frame_for, text='Cargar', font=('roboto', 12), bg=color.BOTON_PRODUCTOS,
                                        command= lambda e = True: self.load_imagen(e))
@@ -283,9 +268,9 @@ class InventarioCatalogo(tk.Frame):
         if file_path:
             try:
                 imagen = leer_imagen(file_path, (120, 120))
-            except:
-                print('No se pudo cargar la imagen')
-                return
+            except Exception as e:
+                messagebox.showerror('Error', 'Error al cargar la imagen')
+                imagen = leer_imagen('imagenes/sinfoto.jpg', (120, 120))
             if edit:
                 self.imag.config(image=imagen)
                 self.imag.image = imagen

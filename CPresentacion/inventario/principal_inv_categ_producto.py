@@ -1,15 +1,15 @@
 import tkinter as tk
 import config as color
 
-from tkinter import Toplevel, messagebox, font, ttk
-from util.util_ventana import centrar_ventana
-from util.util_imagenes import leer_imagen
+from tkinter import messagebox, font, ttk
 
-from BDominio.productos.cargar_producto import CargarProductos
-from BDominio.productos.eliminar_producto import EliminarProducto
 from CPresentacion.inventario.principal_inv_editar import EditarProductoTop
 from CPresentacion.inventario.principal_inv_reponer import ReponerProductoTop
 
+from BDominio.productos.cargar_producto import CargarProductos
+from BDominio.productos.eliminar_producto import EliminarProducto
+
+from util.util_imagenes import leer_imagen
 
 class CategoriaProductoTop(tk.Toplevel):
     def __init__(self, master, item):
@@ -21,7 +21,6 @@ class CategoriaProductoTop(tk.Toplevel):
         self.grab_set()
 
         self.categoria = item
-
         self.create_widget()
     
     def create_widget(self):   
@@ -35,8 +34,6 @@ class CategoriaProductoTop(tk.Toplevel):
     def create_scrollable_list(self):
         container = tk.Frame(self, bd=0.5)
         container.pack(pady=30, padx=20, ipadx=110, ipady=100)
-
-        # Crear encabezados
         header_frame = tk.Frame(container, bg=color.BOTON_PRODUCTOS)
         header_frame.pack(fill='x')
         
@@ -86,9 +83,8 @@ class CategoriaProductoTop(tk.Toplevel):
             except Exception as e:
                 image = leer_imagen('imagenes/sinfoto.jpg', (100, 100))
 
-            if image:
-                img_label.config(image=image)
-                img_label.image = image
+            img_label.config(image=image)
+            img_label.image = image
             
             tk.Label(row_frame, text=item['id'], width=15, anchor='center', bg=c).pack(side='left', padx=5)
             tk.Label(row_frame, text=f"{item['desc']}", width=20, anchor='center', bg=c).pack(side='left', padx=5)

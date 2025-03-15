@@ -46,8 +46,3 @@ class EditarProducto():
             print('error al actualizar cantidad')
             return False
         return True
-
-
-          
-            
-

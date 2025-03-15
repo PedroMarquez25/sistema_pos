@@ -1,6 +1,5 @@
 import tkinter as tk
 import config as colores
-import time
 
 from tkinter import ttk, messagebox, font
 
@@ -48,7 +47,6 @@ class Login(tk.Frame):
         self.entry_clave.pack(side='top',ipady=5, pady=5)
         self.entry_clave.config(show="*")
 
-
         #======================================Botones de inicio y registro============================================
 
         self.boton_login = tk.Button(self.formulario, width=13, text='Login in', font=('Roboto', 14), bd=0
@@ -76,19 +74,3 @@ class Login(tk.Frame):
             self.mostrar_PuntoVenta(usuario)
         elif comprobante == 2:
             self.mostrar_principal(usuario)
-
-        
-         
-        
-   
-
-
-
-        
-       
-
-
-
-        
-
-

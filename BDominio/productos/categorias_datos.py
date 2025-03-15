@@ -1,6 +1,5 @@
 from APersistencia.servicios_consulta_simple import ServiciosConsultaSimple
 
-
 class DatosCategoria():
     def __init__(self):
         consulta = ServiciosConsultaSimple()
@@ -27,6 +26,3 @@ class DatosCategoria():
         for categoria in self.categorias:
             datos.append({'descripcion' : categoria.descripcion, 'id': categoria.id_categoria, 'imagen':categoria.imagen})
         return datos
-
-            
-

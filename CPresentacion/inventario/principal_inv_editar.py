@@ -1,11 +1,13 @@
 import tkinter as tk
 import config as color
 
-from util.util_ventana import centrar_ventana
 from tkinter import font, messagebox, ttk, filedialog
-from util.util_imagenes import leer_imagen
+
 from BDominio.productos.categorias_datos import DatosCategoria
 from BDominio.productos.editar_producto import EditarProducto
+
+from util.util_ventana import centrar_ventana
+from util.util_imagenes import leer_imagen
 
 class EditarProductoTop(tk.Toplevel):
     def __init__(self, master, producto, update_lista):
@@ -16,8 +18,8 @@ class EditarProductoTop(tk.Toplevel):
         self.grab_set()
         self.config(bg=color.FONDO_SEGUNDARIO)
 
-        self.categoria = DatosCategoria()
-        self.categorias = self.categoria.Datos_categoria()
+        categoria = DatosCategoria()
+        self.categorias = categoria.Datos_categoria()
         self.producto = producto
         self.actualizar_lista = update_lista
         self.create_widgets()
@@ -41,15 +43,17 @@ class EditarProductoTop(tk.Toplevel):
         self.imagen = tk.Label(self.frame_formulario)
         self.imagen.grid(row=0, column=1, padx=15, pady=5)
 
-        img = leer_imagen(self.producto['imagen'], (120, 120))
-        if img:
-                self.imagen.config(image=img)
-                self.imagen.image = img
+        try:
+             img = leer_imagen(self.producto['imagen'], (120, 120))
+        except Exception as e:
+             img = leer_imagen('imagenes/sinfoto.jpg', (120,120))
+
+        self.imagen.config(image=img)
+        self.imagen.image = img
 
         self.button_imagen = tk.Button(self.frame_formulario, text='Cargar', font=('roboto', 12), bg=color.BOTON_PRODUCTOS,
                                        command=self.cargar_imagen)
         self.button_imagen.grid(row=1, column=1, ipadx=5)
-
 
         #id_producto
         lbl_id_producto = tk.Label(self.frame_formulario, text='Id_producto', font=('roboto', 12), bg=color.FONDO_SEGUNDARIO)
@@ -82,7 +86,6 @@ class EditarProductoTop(tk.Toplevel):
         self.entry_cantidad.config(state=tk.DISABLED)
 
         #categorias
-
         lbl_categoria= tk.Label(self.frame_formulario, text='Categoria', font=('roboto', 12), background=color.FONDO_SEGUNDARIO)
         lbl_categoria.grid(row=6, column=0, padx=15, pady=5)
         self.Combobox_categoria = ttk.Combobox(self.frame_formulario, values=self.categorias, width=18,  font=('roboto', 12))
@@ -114,11 +117,14 @@ class EditarProductoTop(tk.Toplevel):
         self.boton_cancelar.grid(row=9, column=1, ipadx=15 , pady=10, ipady=5, sticky=tk.E)
 
     def cargar_imagen(self):
-        file_path = filedialog.askopenfilename() #abre cuadro de dialogo
+        file_path = filedialog.askopenfilename() 
         if file_path:
-             img = leer_imagen(file_path, (120, 120)) #Abre la imagen
-             # extrae el nombre completo
-             self.producto['imagen'] = file_path
+             try:
+                img = leer_imagen(file_path, (120, 120))
+                self.producto['imagen'] = file_path 
+             except Exception as e:
+                 img = leer_imagen('imagenes/sinfoto.jpg', (120, 120))
+                 messagebox.showerror('Error', 'Error al cargar la imagen', parent = self)
              self.imagen.config(image=img)
              self.imagen.image = img
 
@@ -129,15 +135,15 @@ class EditarProductoTop(tk.Toplevel):
          precio = self.entry_precio.get()
          self.entry_cantidad.config(state=tk.NORMAL)
          cantidad = self.entry_cantidad.get()
-         self.entry_cantidad.config(state=tk.DISABLED)
-         categoria = self.categoria.id_categoria(self.Combobox_categoria.get())
+         self.entry_cantidad.config(state=tk.DISABLED) 
          estado = self.entry_estado.get()
+         categoria = DatosCategoria()
+         categoria = categoria.id_categoria(self.Combobox_categoria.get())
          fecha = '0'
-
+         
          if self.producto['fecha'] != None:
             fecha = self.entry_fecha.get()
         
-
          if not self.campos_vacios(descripcrion, precio, cantidad, fecha):
             messagebox.showerror(title='Mensaje', message='Campos vacios', parent = self)
             return
@@ -157,16 +163,3 @@ class EditarProductoTop(tk.Toplevel):
               return True
          return False
              
-
-
-
-
-
-        
-
-
-
-
-
-
-

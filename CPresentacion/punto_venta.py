@@ -5,23 +5,19 @@ import config as colores
 from tkinter import font, messagebox, ttk
 from util.util_imagenes import leer_imagen
 
-from BDominio.productos.cargar_producto import CargarProductos
 from BDominio.usuarios.cargar_usuarios import CargarUsuario
-from BDominio.ventas.cargar_monedas import CargarMoneda
-from BDominio.productos.cargar_producto import CargarProductos
 from BDominio.usuarios.validar_usuario import UsuarioValid
 
+from BDominio.productos.cargar_producto import CargarProductos
+from BDominio.productos.editar_producto import EditarProducto
 
 from BDominio.ventas.guardar_venta import Registrar_venta
 from BDominio.ventas.venta_reciente import VentaReciente
 from BDominio.ventas.registrar_productos_ventas import RegistrarProductoVentas
-from BDominio.productos.editar_producto import EditarProducto
+from BDominio.ventas.cargar_monedas import CargarMoneda
 from BDominio.ventas.generar_factura import Factura
 
-
 from util.util_ventana import centrar_ventana
-
-
 
 class PuntoVenta(tk.Frame):
     def __init__(self, parent, mostrar_login, usuario, mostrar_principal):
@@ -32,13 +28,14 @@ class PuntoVenta(tk.Frame):
         self.mostrar_login = mostrar_login
         self.mostrar_principal = mostrar_principal
         self.usuario = usuario
-        self.font_awesome = font.Font(family="Font Awesome 6 Free Solid" ,size=20)
-        self.font_aw = font.Font(family="Font Awesome" ,size=12)
+
         self.productos = CargarProductos()
         self.monedas = CargarMoneda()
         self.simbolo = self.monedas.cargar_simbolo_monedas('Bolivar')
-        self.ultimo_texto = ''
-        self.ultimo_texto2 = ''
+
+        self.font_awesome = font.Font(family="Font Awesome 6 Free Solid" ,size=20)
+        self.font_aw = font.Font(family="Font Awesome" ,size=12)
+        self.ultimo_texto, self.ultimo_texto2 = '', ''
 
         self.paneles()
         self.widgets_barra_superior()
@@ -59,7 +56,6 @@ class PuntoVenta(tk.Frame):
         self.list_productos = tk.Frame(self, bg=colores.BOTON_PRODUCTOS, width=667)
         self.list_productos.pack(side=tk.RIGHT, fill=tk.BOTH , expand=True, padx=1, pady=5)
 
-        
     #=============Creacion de widgets=================================
     def widgets_barra_superior(self):
          self.icono = tk.Button(self.barra_superior, text= '\uf0c9', font=self.font_awesome,
@@ -72,7 +68,6 @@ class PuntoVenta(tk.Frame):
          self.lbl_nombre.pack(side=tk.LEFT)
 
          #====================crear imagen de perfil con un canvas================
-
          cargar_imag = CargarUsuario()
          try:
             self.imagen = leer_imagen(cargar_imag.Cargar_imagen(self.usuario), (50,40))
@@ -92,6 +87,7 @@ class PuntoVenta(tk.Frame):
                                       )
          self.button_notify.config(bg=colores.COLOR_SEGUNDARIO, fg=colores.COLOR_TEXTO, bd=0)
          self.button_notify.pack(side=tk.RIGHT, padx = 5)
+
     def widgets_panel_izquierdo(self):
         #============Cerrar turno================
         self.btn_cerrar_turno = tk.Button(self.panel_izquierdo, text='Cerrar turno  \uf2f5', height=1, width=20, bd=1,
@@ -116,6 +112,7 @@ class PuntoVenta(tk.Frame):
                                           command=self.ir_principal)
             self.btn_ir_principal.config( bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
             self.btn_ir_principal.pack(side=tk.BOTTOM, pady=4, ipady=5)
+
     def widgets_factura(self):
         self.productos_factura = []
         #=====================frame titulo==============================
@@ -180,6 +177,7 @@ class PuntoVenta(tk.Frame):
         self.entry_productos_pagar = ttk.Entry(self.frame_botones, font='Roboto 12',  width=20, justify='right', background=colores.BOTON_PRODUCTOS)
         self.entry_productos_pagar.grid(row=1, column=1, pady=5 ,ipady=7)
         self.entry_productos_pagar.config(state=tk.DISABLED)
+
     def widgets_list_producto(self):
         #================frame buscar==========================================================
         self.frame_buscar = tk.Frame(self.list_productos, bg=colores.FONDO_SEGUNDARIO)
@@ -265,7 +263,6 @@ class PuntoVenta(tk.Frame):
 
     #================buscar productos==============================================================
     def populate_list_busqueda(self, datos):
-        #Datos de productos
         data = datos
 
         si = 0
@@ -285,6 +282,7 @@ class PuntoVenta(tk.Frame):
             
             tk.Button(row_frame, text="Agregar", width=10, bg=colores.BOTON_PRODUCTOS, bd = 0,
                       command=lambda e = item :self.agregar(e)).pack(side='left', padx=6, ipady=2, pady=7)
+            
     def buscar_producto(self):
         if len(self.entry_codigo_barra.get()) == 0:
             messagebox.showerror('Error', 'Campo de busqueda vacio')
@@ -294,16 +292,17 @@ class PuntoVenta(tk.Frame):
             messagebox.showerror('Error', 'Datos incorrectos')
             return
         self.update_lista_busqueda(busqueda)
+
     def buscar_producto_desc(self):
         busqueda = self.productos.buscar_producto_desc_activo(self.entry_buscar.get())
         if busqueda == False:
             messagebox.showerror('Error', 'Datos incorrectos')
             return
         self.update_lista_busqueda(busqueda)
+
     def detectar_eliminacion(self,event):
         texto_actual = self.entry_buscar.get()
 
-        # Verifica si se eliminó texto (comparando la longitud)
         if len(texto_actual) < len(self.ultimo_texto):
             if len(texto_actual) == 0:
                 self.update_lista_busqueda(self.productos.cargar_productos_activos())
@@ -315,12 +314,11 @@ class PuntoVenta(tk.Frame):
             else :
                 self.buscar_producto_desc()  
 
-        #Actualizar el último estado del texto
         self.ultimo_texto = texto_actual
+
     def detectar_eliminacion_codigo_barra(self,event):
         texto_actual = self.entry_codigo_barra.get()
 
-        # Verifica si se eliminó texto (comparando la longitud)
         if len(texto_actual) < len(self.ultimo_texto2):
             if len(texto_actual) == 0:
                 self.update_lista_busqueda(self.productos.cargar_productos_activos())
@@ -332,13 +330,12 @@ class PuntoVenta(tk.Frame):
             else:
                 self.buscar_producto()
         
-        # Actualizar el último estado del texto
         self.ultimo_texto2 = texto_actual
+
     def update_lista_busqueda(self, data):
         for frame in self.scrollable_frame.winfo_children():
             frame.destroy()
         self.populate_list_busqueda(data)
-
 
     #==================Agregar producto a facturaa==============================================================
     def agregar(self, item):
@@ -368,6 +365,7 @@ class PuntoVenta(tk.Frame):
             self.agregar_a_factura(producto_dic)
             self.aumentar_cantidad_producto()
             self.aumentar_precio_venta(precio)
+
     def agregar_a_factura(self, producto):
         frame_producto = tk.Frame(self.scrollable_productos)
         frame_producto.pack(fill='x', pady=3)
@@ -384,9 +382,9 @@ class PuntoVenta(tk.Frame):
         menos = tk.Button(frame_producto, text = '-' , anchor='center',  font='roboto 14', bd=0,
                           command= lambda c = producto['id'] : self.disminuir_cantidad_boton(c)).pack(side='left', padx=5)
 
-
         precio = tk.Label(frame_producto, text=f'{producto['precio'] }', width=18, anchor='e', ).pack(side='left', padx=5)
         simbolo = tk.Label(frame_producto, text=self.simbolo[self.combo_moneda.get()], width=2, anchor='e', ).pack(side='left')
+
     def verificar_existencia(self, id):
         if self.productos_factura == None:
             return False
@@ -395,7 +393,6 @@ class PuntoVenta(tk.Frame):
                 return True
         return False
     
-
     def actualizar_cantidad_factura(self, codigo):
         precio1 = ''
         for frame_producto_factura in self.scrollable_productos.winfo_children():
@@ -442,7 +439,8 @@ class PuntoVenta(tk.Frame):
                         precio_total = float(producto.cget('text'))
                         precio_total = precio_total + precio1
                         producto.config(text=f'{precio_total}')
-                        return                 
+                        return   
+                                  
     def disminuir_cantidad_boton(self, codigo):
         precio1 = ''
         for frame_producto_factura in self.scrollable_productos.winfo_children():
@@ -475,7 +473,8 @@ class PuntoVenta(tk.Frame):
                         precio_total = precio_total - precio1
                         producto.config(text=f'{precio_total}')
                         self.disminuir_precio_pagar(precio1)
-                        return                   
+                        return    
+                                   
     def actualizar_cantidad_factura(self, codigo):
         precio1 = ''
         for frame_producto_factura in self.scrollable_productos.winfo_children():
@@ -494,7 +493,8 @@ class PuntoVenta(tk.Frame):
                         precio_total = float(producto.cget('text'))
                         precio_total = precio_total + precio1
                         producto.config(text=f'{precio_total}')
-                        return         
+                        return  
+                           
     def aumentar_cantidad_producto(self):
         self.entry_productos_pagar.config(state=tk.NORMAL)
         if len(self.entry_productos_pagar.get()) == 0:
@@ -504,6 +504,7 @@ class PuntoVenta(tk.Frame):
             self.entry_productos_pagar.delete(0, 'end')
             self.entry_productos_pagar.insert(0, f'{1 + cantidad}')
         self.entry_productos_pagar.config(state=tk.DISABLED)
+
     def aumentar_precio_venta(self, precio):
         self.entry_precio_pagar.config(state=tk.NORMAL)
         if len(self.entry_precio_pagar.get()) == 0:
@@ -513,18 +514,21 @@ class PuntoVenta(tk.Frame):
             self.entry_precio_pagar.delete(0, 'end')
             self.entry_precio_pagar.insert(0, f'{precio + cantidad}')
         self.entry_precio_pagar.config(state=tk.DISABLED)  
+
     def disminuir_cantidad_producto(self):
         self.entry_productos_pagar.config(state=tk.NORMAL)
         cantidad = int(self.entry_productos_pagar.get())
         self.entry_productos_pagar.delete(0, 'end')
         self.entry_productos_pagar.insert(0, f'{cantidad - 1}')
         self.entry_productos_pagar.config(state=tk.DISABLED)
+
     def disminuir_precio_pagar(self, precio):
         self.entry_precio_pagar.config(state=tk.NORMAL)
         cantidad = float(self.entry_precio_pagar.get())
         self.entry_precio_pagar.delete(0, 'end')
         self.entry_precio_pagar.insert(0, f'{cantidad - precio}')
         self.entry_precio_pagar.config(state=tk.DISABLED) 
+
     def cancelar_factura(self):
         if messagebox.askretrycancel('Mensaje','¿Cancelar factura?'):
             for frame in self.scrollable_productos.winfo_children():
@@ -537,7 +541,6 @@ class PuntoVenta(tk.Frame):
             self.entry_productos_pagar.config(state=tk.DISABLED)
             self.productos_factura = []
             
-
     def limpiar_despues_venta(self):
        for frame in self.scrollable_productos.winfo_children():
             frame.destroy()
@@ -558,14 +561,14 @@ class PuntoVenta(tk.Frame):
         if c == 0:
             return 0 
 
-        PagarFactura(self, self.productos_factura, float(self.entry_precio_pagar.get()), float(self.entry_productos_pagar.get()), self.simbolo, self.limpiar_despues_venta)
-
+        PagarFactura(self, self.productos_factura, float(self.entry_precio_pagar.get()), int(self.entry_productos_pagar.get()), self.simbolo, self.limpiar_despues_venta, self.usuario)
     #================configuraciones de punto de venta================================== 
     def toggle_panel(self):
         if self.panel_izquierdo.winfo_ismapped():
             self.panel_izquierdo.pack_forget()
         else:
             self.panel_izquierdo.pack(side=tk.LEFT, fill='y')
+
     def notify(self):
         self.notificaciones = tk.Toplevel(self)
         self.notificaciones.geometry("400x500+900+70")
@@ -573,6 +576,7 @@ class PuntoVenta(tk.Frame):
         self.notificaciones.title("Notificaciones")
         self.notificaciones.resizable(0,0)
         self.notificaciones.grab_set()
+        
     def cerrar_turno(self):
         respuesta = messagebox.askyesno(title='Mensaje', message='¿Quieres salir?')
         if respuesta:
@@ -583,10 +587,8 @@ class PuntoVenta(tk.Frame):
             self.mostrar_principal(self.usuario)
 
 
-
-
 class PagarFactura(tk.Toplevel):
-    def __init__(self, parent, productos, precio_total, n_producto, moneda, limpiar_despues_de_venta):
+    def __init__(self, parent, productos, precio_total, n_producto, moneda, limpiar_despues_de_venta, usuario):
         super().__init__(parent)
         self.title('Pago factura')
         self.geometry((centrar_ventana(self, 450, 600)))
@@ -598,6 +600,7 @@ class PagarFactura(tk.Toplevel):
         self.productos = productos
         self.n_producto = n_producto
         self.precio_total = precio_total
+        self.usuario = usuario
         self.moneda = moneda
         self.font_awesome = font.Font(family="Font Awesome 6 Free Solid" ,size=20)
         self.limpiar_despues_de_venta = limpiar_despues_de_venta
@@ -629,13 +632,13 @@ class PagarFactura(tk.Toplevel):
         self.boton_cancelar.pack(anchor='e', padx=10, pady=10)
         
     def pagar_efectivo(self):
-        PagarEfectivo(self, self.productos, self.precio_total, self.n_producto, self.moneda['Bolivar'], self.limpiar_despues_de_venta)
-    def pagar_banco(self):
-        PagarBanco(self, self.productos, self.precio_total, self.n_producto, self.moneda['Bolivar'], self.limpiar_despues_de_venta)
+        PagarEfectivo(self, self.productos, self.precio_total, self.n_producto, self.moneda['Bolivar'], self.limpiar_despues_de_venta, self.usuario)
 
+    def pagar_banco(self):
+        PagarBanco(self, self.productos, self.precio_total, self.n_producto, self.moneda['Bolivar'], self.limpiar_despues_de_venta, self.usuario)
 
 class PagarEfectivo(tk.Toplevel):
-    def __init__(self, parent, productos, precio_total, n_producto, moneda, limpiar_despues_de_venta):
+    def __init__(self, parent, productos, precio_total, n_producto, moneda, limpiar_despues_de_venta, usuario):
         super().__init__(parent)
         self.title('Pagar efectivo')
         self.geometry((centrar_ventana(self, 450, 600)))
@@ -644,6 +647,7 @@ class PagarEfectivo(tk.Toplevel):
         self.config(bg=colores.FONDO_SEGUNDARIO)
         self.ultimo_texto = ''
 
+        self.usuario = usuario
         self.productos = productos
         self.n_producto = n_producto
         self.precio_total = precio_total
@@ -694,7 +698,6 @@ class PagarEfectivo(tk.Toplevel):
     def detectar_eliminacion(self,event):
         texto_actual = self.entry_pago_efectivo.get()
         
-        # Verifica si se eliminó texto (comparando la longitud)
         self.entry_cambio_efectivo.config(state=tk.NORMAL)
         try:
             if len(texto_actual) < len(self.ultimo_texto):
@@ -713,25 +716,27 @@ class PagarEfectivo(tk.Toplevel):
                     self.entry_cambio_efectivo.delete(0, 'end')
                     self.entry_cambio_efectivo.insert(0, f'{self.precio_total - cantidad}')
         except Exception as e:
-            messagebox.showerror('Error', 'Ingrese sol0 numeros', parent = self)
+            messagebox.showerror('Error', 'Ingrese solo numeros', parent = self)
 
         self.entry_cambio_efectivo.config(state=tk.DISABLED)
-                
-        # Actualizar el último estado del texto
         self.ultimo_texto = texto_actual
 
     def vender(self):
+        if len(self.entry_pago_efectivo.get()) == 0:
+            messagebox.showerror('Error', "Complete los campo", parent = self)
+            return
+        
         if not messagebox.askyesno('Mensaje', '¿Vender producto?', parent = self):
-            return 0
+            return
         
         fecha_hora = datetime.datetime.now()
         registar_ven = Registrar_venta()
-        monedas = CargarMoneda()
-        moneda = monedas.cargar_nombre_monedas(self.moneda)
+        moneda = CargarMoneda().cargar_nombre_monedas(self.moneda)
+        dni_usuario = CargarUsuario().cargar_dni_usuario(self.usuario)
 
         fecha, hora = fecha_hora.date(), fecha_hora.strftime("%H:%M:%S")
 
-        if not registar_ven.guardar_venta(self.precio_total, fecha, moneda, hora):
+        if not registar_ven.guardar_venta(self.precio_total, fecha, moneda, hora, dni_usuario):
             print(self.precio_total,fecha,moneda,hora)
             messagebox.showerror('Error','No se pudo hacer la venta error al guardar los datos')
             return 0 
@@ -759,7 +764,7 @@ class PagarEfectivo(tk.Toplevel):
        
 
 class PagarBanco(tk.Toplevel):
-    def __init__(self, parent, productos, precio_total, n_producto, moneda, limpiar_despues_de_venta):
+    def __init__(self, parent, productos, precio_total, n_producto, moneda, limpiar_despues_de_venta, usuario):
         super().__init__(parent)
         self.title('Pagar banco')
         self.geometry((centrar_ventana(self, 450, 600)))
@@ -768,6 +773,7 @@ class PagarBanco(tk.Toplevel):
         self.config(bg=colores.FONDO_SEGUNDARIO)
         self.ultimo_texto = ''
 
+        self.usuario = usuario
         self.productos = productos
         self.n_producto = n_producto
         self.precio_total = precio_total
@@ -794,16 +800,17 @@ class PagarBanco(tk.Toplevel):
         lbl_pago = tk.Label(self.frame_metodo, text='Precio a pagar',font = 'roboto 12', bg=colores.FONDO_SEGUNDARIO, justify='left')
         lbl_pago.pack(padx=10,ipady=9, anchor='w')
 
-        self.entry_pago_efectivo = ttk.Entry(self.frame_metodo,font='roboto 12' )
-        self.entry_pago_efectivo.pack(pady=5, ipadx=80, ipady=10) 
-        self.entry_pago_efectivo.insert(0, self.precio_total)
-        self.entry_pago_efectivo.config(state=tk.DISABLED)   
+        self.entry_pago = ttk.Entry(self.frame_metodo,font='roboto 12' )
+        self.entry_pago.pack(pady=5, ipadx=80, ipady=10) 
+        self.entry_pago.insert(0, self.precio_total)
+        self.entry_pago.config(state=tk.DISABLED)   
 
-        lbl_cambio = tk.Label(self.frame_metodo, text='Cambio',font = 'roboto 12', bg=colores.FONDO_SEGUNDARIO, justify='left')
+        lbl_cambio = tk.Label(self.frame_metodo, text='Bancos',font = 'roboto 12', bg=colores.FONDO_SEGUNDARIO, justify='left')
         lbl_cambio.pack(padx=10 ,ipady=9, anchor='w')
         
-        self.entry_cambio_efectivo = ttk.Combobox(self.frame_metodo, font='roboto 12', values=('Banco venezuela', 'Banco banesco'))
-        self.entry_cambio_efectivo.pack( pady=5 ,padx=20, ipadx=75, ipady=10)
+        self.entry_banco = ttk.Combobox(self.frame_metodo, font='roboto 12', values=('Banco venezuela', 'Banco banesco'))
+        self.entry_banco.pack( pady=5 ,padx=20, ipadx=75, ipady=10)
+        self.entry_banco.current(0)
 
         self.boton_pagar = tk.Button(self, text='Pagar', font='roboto 12', bg=colores.COLOR_FACTURA, bd=0,
                                         command=self.vender)
@@ -819,12 +826,12 @@ class PagarBanco(tk.Toplevel):
         
         fecha_hora = datetime.datetime.now()
         registar_ven = Registrar_venta()
-        monedas = CargarMoneda()
-        moneda = monedas.cargar_nombre_monedas(self.moneda)
+        moneda = CargarMoneda().cargar_nombre_monedas(self.moneda)
+        dni_usuario = CargarUsuario().cargar_dni_usuario(self.usuario)
 
         fecha, hora = fecha_hora.date(), fecha_hora.strftime("%H:%M:%S")
 
-        if not registar_ven.guardar_venta(self.precio_total, fecha, moneda, hora):
+        if not registar_ven.guardar_venta(self.precio_total, fecha, moneda, hora, dni_usuario):
             print(self.precio_total,fecha,moneda,hora)
             messagebox.showerror('Error','No se pudo hacer la venta error al guardar los datos')
             return 0 
@@ -851,7 +858,7 @@ class PagarBanco(tk.Toplevel):
         Imprimir_factura(self, id_venta, self.moneda, self.precio_total, self.parent, self.limpiar_despues_de_venta)
         
 
-
+        
 class Imprimir_factura(tk.Toplevel):
     def __init__(self, parent, id_venta, moneda, precio, abuelo, limpiar_factura):
         super().__init__(parent)
@@ -869,9 +876,10 @@ class Imprimir_factura(tk.Toplevel):
         self.moneda = moneda
         self.precio_total = precio
         self.abuelo = abuelo
-        self.limpiar_factura =limpiar_factura
+        self.limpiar_factura = limpiar_factura
 
         self.crear_widgets()
+        self.imprimir_factura()
 
     def crear_widgets(self):
         lbl_titulo = tk.Label(self, text='Factura', font='roboto 16', bg=colores.FONDO_SEGUNDARIO)
@@ -895,13 +903,9 @@ class Imprimir_factura(tk.Toplevel):
         lbl_precio = tk.Label(self.frame_metodo, text=f'{self.moneda} {self.precio_total}',font = 'roboto 16', bg=colores.FONDO_SEGUNDARIO, fg=colores.COLOR_FACTURA)
         lbl_precio.pack(side='right',padx=15, pady=5)
 
-        self.imprimir = tk.Button(self, text='Imprimir', font='roboto 12', bg=colores.COLOR_FACTURA, bd=0,
-                                        command=self.imprimir_factura)
-        self.imprimir.pack( padx=60, pady=6, fill='x', expand=True, ipady=8)
-
         self.nueva_venta = tk.Button(self, text='Nueva venta', font='roboto 12', bg=colores.COLOR_FACTURA, bd=0,
                                  command=self.nueva_venta)
-        self.nueva_venta.pack(padx=70, pady=6, fill='x', expand=True, ipady=8)
+        self.nueva_venta.pack(padx=50, pady=10, fill='x', expand=True, ipady=8)
 
     def imprimir_factura(self):
         factura = Factura(self.id_venta)
@@ -910,6 +914,3 @@ class Imprimir_factura(tk.Toplevel):
     def nueva_venta(self):
         self.limpiar_factura()
         self.abuelo.destroy()
-
-
-

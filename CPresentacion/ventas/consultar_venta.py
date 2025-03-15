@@ -1,24 +1,18 @@
 import tkinter as tk
 import config as color
-
-from BDominio.ventas.cargar_datos_venta import DatosVenta
-from BDominio.ventas.eliminar_venta import EliminarVenta
-
-from tkinter import ttk, messagebox, font
-from util.util_imagenes import leer_imagen
-from BDominio.productos.eliminar_producto import EliminarProducto
-from CPresentacion.inventario.principal_inv_editar import EditarProductoTop
-from CPresentacion.inventario.principal_inv_reponer import ReponerProductoTop
 import os
 import webbrowser
 
+from tkinter import ttk, messagebox, font
+
+from BDominio.ventas.cargar_datos_venta import DatosVenta
+from BDominio.ventas.eliminar_venta import EliminarVenta
 
 class VentasConsulta(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.config(background=color.FONDO_SEGUNDARIO)
         self.pack(fill='both', expand=True ,padx=5, pady=5)
-
 
         self.create_widget()
     
@@ -35,14 +29,14 @@ class VentasConsulta(tk.Frame):
         container = tk.Frame(self, bd=0.5)
         container.place(x=20, y=120, height=500, width=1080)
 
-        # Crear encabezados
         header_frame = tk.Frame(container, bg=color.BOTON_VENTAS)
         header_frame.pack(fill='x')
         
-        tk.Label(header_frame, text="Id_venta", width=30, height=2 ,anchor='center', bg=color.BOTON_VENTAS, font='roboto 9 ').pack(side='left', padx=5)
-        tk.Label(header_frame, text="Precio Total", width=30,height=2 ,anchor='center',  bg=color.BOTON_VENTAS, font='roboto 9 ').pack(side='left', padx=5)
-        tk.Label(header_frame, text="Fecha", width=30,height=2 ,anchor='center',  bg=color.BOTON_VENTAS, font='roboto 9 ').pack(side='left', padx=5)
-        tk.Label(header_frame, text="Hora", width=30,height=2 ,anchor='center',  bg=color.BOTON_VENTAS, font='roboto 9 ').pack(side='left', padx=5)
+        tk.Label(header_frame, text="Id_venta", width=23, height=2 ,anchor='center', bg=color.BOTON_VENTAS, font='roboto 9 ').pack(side='left', padx=5)
+        tk.Label(header_frame, text="Precio Total", width=23,height=2 ,anchor='center',  bg=color.BOTON_VENTAS, font='roboto 9 ').pack(side='left', padx=5)
+        tk.Label(header_frame, text="Fecha", width=23,height=2 ,anchor='center',  bg=color.BOTON_VENTAS, font='roboto 9 ').pack(side='left', padx=5)
+        tk.Label(header_frame, text="Hora", width=23,height=2 ,anchor='center',  bg=color.BOTON_VENTAS, font='roboto 9 ').pack(side='left', padx=5)
+        tk.Label(header_frame, text="Usuario", width=23, height=2, anchor='center',  bg=color.BOTON_VENTAS, font='roboto 9 ').pack(side='left', padx=5)
         tk.Label(header_frame, text="Opciones", width=35,height=2 ,anchor='w',  bg=color.BOTON_VENTAS, font='roboto 9 ').pack(side='left', padx=5)
         
         self.canvas = tk.Canvas(container)
@@ -61,7 +55,6 @@ class VentasConsulta(tk.Frame):
     
     def populate_list(self):
         font_awesome = font.Font(family="Font Awesome 6 Free Solid" ,size=15)
-        #Datos de productos
         ventas = DatosVenta()
         data = ventas.consultar_ventas()
 
@@ -74,19 +67,18 @@ class VentasConsulta(tk.Frame):
             row_frame = tk.Frame(self.scrollable_frame, bg=c)
             row_frame.pack(fill='x', pady=3)
             
-            
-            tk.Label(row_frame, text=item['id'], width=30, anchor='center', bg=c).pack(side='left', padx=5)
-            tk.Label(row_frame, text=f"Bs.{item['precio_total']}", width=30, anchor='center', bg=c).pack(side='left', padx=5)
-            tk.Label(row_frame, text=f"{item['fecha']}", width=30, anchor='center', bg=c).pack(side='left', padx=5)
-            tk.Label(row_frame, text=f"{item['hora']}", width=30, anchor='center', bg=c).pack(side='left', padx=5)
+            tk.Label(row_frame, text=item['id'], width=23, anchor='center', bg=c).pack(side='left', padx=5)
+            tk.Label(row_frame, text=f"Bs.{item['precio_total']}", width=23, anchor='center', bg=c).pack(side='left', padx=5)
+            tk.Label(row_frame, text=f"{item['fecha']}", width=23, anchor='center', bg=c).pack(side='left', padx=5)
+            tk.Label(row_frame, text=f"{item['hora']}", width=23, anchor='center', bg=c).pack(side='left', padx=5)
+            tk.Label(row_frame, text=f"{item['dni_usuario']}", width=23, anchor='center', bg=c).pack(side='left', padx=5)
            
             tk.Button(row_frame,text="\uf571", font=font_awesome, width=4, bg=color.BOTON_VENTAS, bd = 0,
                       command=lambda i=item: self.ver_item(i)).pack(side='left', padx=7)
             
             tk.Button(row_frame, text="\uf1f8",font=font_awesome, width=4, bg=color.BOTON_VENTAS, bd = 0,
                       command=lambda i=item, f=row_frame: self.delete_item(i, f)).pack(side='left', padx=7)
-            
-         
+                 
     def ver_item(self, item):
         # Definir la carpeta donde están las facturas
         carpeta_facturas = r"C:\Users\pedro\OneDrive\Documentos\facturas"
@@ -114,5 +106,4 @@ class VentasConsulta(tk.Frame):
     def update_lista(self):
         for frame in self.scrollable_frame.winfo_children():
             frame.destroy()
-        self.populate_list()
-    
+        self.populate_list() 

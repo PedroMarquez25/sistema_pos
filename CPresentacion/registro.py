@@ -1,9 +1,11 @@
 import tkinter as tk
 import config as colores
 
+from tkinter import ttk, messagebox, font
+
 from BDominio.usuarios.validar_usuario import UsuarioValid
 from BDominio.usuarios.guardar_usuario import GuardarUsuario
-from tkinter import ttk, messagebox, font
+
 from util.util_ventana import centrar_ventana
 
 class Registro(tk.Frame):
@@ -125,7 +127,6 @@ class Registro(tk.Frame):
                
     def guardar_usuario(self):
         valid_user = UsuarioValid()
-
         dni = self.txt_dni_usario.get()
         nombre = self.txt_nombre_usario.get()
         rol = self.txt_rol_usario.get()
@@ -145,8 +146,7 @@ class Registro(tk.Frame):
             if messagebox.askretrycancel(title='Mensaje', message='¿Registrar usuario?', parent = self.frame_nuevo_usario):
                 if guardar.guardar_datos(dni, nombre, usuario, clave1, rol):
                     messagebox.showinfo(title='Mensaje', message='Usuario creado correctamente', parent = self.frame_nuevo_usario)
-                    self.frame_nuevo_usario.destroy()
-                    
+                    self.frame_nuevo_usario.destroy()           
                 else:
                     messagebox.showerror(title='Mensaje', message='Error inesperado', parent = self.frame_nuevo_usario)
         else:
@@ -161,4 +161,3 @@ class Registro(tk.Frame):
                
     def campos_vacios(self, dni, nombre, usuario, clave1, clave2):
         return True if len(dni) != 0 and len(nombre) != 0 and len(usuario) != 0 and clave1 != 0 and clave2 !=0 else False
-  

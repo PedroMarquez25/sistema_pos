@@ -2,19 +2,20 @@ import tkinter as tk
 import config as color
 
 from tkinter import font, ttk, messagebox, filedialog
-from util.util_imagenes import leer_imagen
 
 from BDominio.usuarios.validar_usuario import UsuarioValid
 from BDominio.usuarios.guardar_usuario import GuardarUsuario
+
+from util.util_imagenes import leer_imagen
 
 class UsuariosRegistrar(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.config(background=color.FONDO_SEGUNDARIO)
         self.pack(fill='both', expand=True ,padx=5, pady=5)
-        self.crear_widgets()
-
+        
         self.imagen_name = "imagenes/sinfoto.jpg"
+        self.crear_widgets()
 
     def crear_widgets(self):
         font_awesome = font.Font(family="Font Awesome" ,size=15)
@@ -58,7 +59,7 @@ class UsuariosRegistrar(tk.Frame):
         self.entry_clave.grid(row=5, column=1, padx=pax, pady=pay, ipadx=ix, ipady=iy)
 
         #repetir clave
-        repetir_lbl_clave = tk.Label(self.formulario, text='Repetir lave', font='roboto 12', bg=color.FONDO_SEGUNDARIO)
+        repetir_lbl_clave = tk.Label(self.formulario, text='Repetir clave', font='roboto 12', bg=color.FONDO_SEGUNDARIO)
         repetir_lbl_clave.grid(row=6,column=0, padx=pax, pady=pay, sticky=tk.W)
         self.entry_clave2 = ttk.Entry(self.formulario, font='roboto 12')
         self.entry_clave2.grid(row=6, column=1, padx=pax, pady=pay, ipadx=ix, ipady=iy)
@@ -83,7 +84,6 @@ class UsuariosRegistrar(tk.Frame):
         self.imagen.image = imag
 
         #botones
-        
         self.Cargar_imagen = tk.Button(self.formulario, text='Cargar imagen' ,font=font_awesome, bg=color.BOTON_USUARIOS, width=20, height=1, bd=0,
                                        command=self.load_imagen)
         self.Cargar_imagen.grid(row=5, column=2, padx=pax, pady=20, ipady=1, sticky=tk.W)
@@ -115,7 +115,7 @@ class UsuariosRegistrar(tk.Frame):
                 messagebox.showerror('Error', 'Dni contiene valores no numericos')
                 return 0
 
-            if messagebox.askretrycancel(title='Mensaje', message='¿Registrar usuario?'):
+            if messagebox.askyesno(title='Mensaje', message='¿Registrar usuario?'):
                 if guardar.guardar_datos(dni, nombre, usuario, clave1, rol, imagen):
                     messagebox.showinfo(title='Mensaje', message='Usuario creado correctamente')
                     self.limpiar_campos()
@@ -134,7 +134,12 @@ class UsuariosRegistrar(tk.Frame):
     def load_imagen(self):
         file_path = filedialog.askopenfilename() #abre cuadro de dialogo
         if file_path:
-            imag = leer_imagen(file_path, (120, 120))
+            try:
+                imag = leer_imagen(file_path, (120, 120))
+            except Exception as e:
+                messagebox.showerror('Error', 'Error al cargar la imagen')
+                file_path = "imagenes/sinfoto.jpg"
+                imag = leer_imagen("imagenes/sinfoto.jpg", (120, 120))
             self.imagen.config(image=imag)
             self.imagen.image = imag
             self.imagen_name = file_path

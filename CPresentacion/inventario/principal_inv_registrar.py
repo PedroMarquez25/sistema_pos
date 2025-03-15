@@ -2,8 +2,10 @@ import tkinter as tk
 import config as color
 
 from tkinter import font, ttk, messagebox, filedialog
+
 from BDominio.productos.categorias_datos import DatosCategoria
 from BDominio.productos.registrar_producto import RegistrarProducto
+
 from util.util_imagenes import leer_imagen
 
 class InventarioRegistrar(tk.Frame):
@@ -94,16 +96,13 @@ class InventarioRegistrar(tk.Frame):
         fecha_ven = self.entry_fecha_vencimieto.get()
         imagen = self.imagen_perfil_sinfoto
 
-        if len(fecha_ven) == 0:
-            fecha_ven = '0'
+        fecha_ven = '0' if len(fecha_ven) == 0 else fecha_ven
 
-            
-        
         if len(descripcion) == 0 or len(categoria) == 0 or len(cantidad) == 0 or len(precio) == 0:
             messagebox.showerror('Mensaje', 'Complete todos los campos')
             return
         
-        if messagebox.askokcancel('Registrar_producto', '¿Guardar producto?'):
+        if messagebox.askyesno('Registrar_producto', '¿Guardar producto?'):
             registrar = RegistrarProducto()
             confirmacion = registrar.regitrar(descripcion, precio, cantidad, fecha_ven, categoria, imagen)
             if confirmacion == 1:
@@ -132,14 +131,3 @@ class InventarioRegistrar(tk.Frame):
         imag = leer_imagen(self.imagen_perfil_sinfoto, (120, 120))
         self.Cargar_imagen.config(image=imag)
         self.Cargar_imagen.image = imag
-
-
-        
-        
-
-
-
-
-
-
-

@@ -15,3 +15,9 @@ class CargarUsuario():
         for usuarios in self.consultar_usuario.usuarios():
             if usuarios.usuario == usuario:
                 return usuarios.perfil
+            
+    def cargar_dni_usuario(self, usuario):
+        datos = []
+        for usuarios in self.consultar_usuario.usuarios():
+            if usuarios.usuario == usuario:
+                return usuarios.dni

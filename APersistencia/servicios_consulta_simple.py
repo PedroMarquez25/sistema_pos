@@ -8,9 +8,7 @@ class ServiciosConsultaSimple(Consulta):
     def productos(self):
         productos = []
 
-        registros = self.consulta_simple('producto')
-
-        for i in registros:
+        for i in self.consulta_simple('producto'):
             id, descripcion, precio, cantidad, fecha_ven, id_categoria, imagen, estado = i 
             productos.append(modelos.Productos(id, descripcion, precio, cantidad, fecha_ven, id_categoria, imagen, estado))
         
@@ -19,20 +17,16 @@ class ServiciosConsultaSimple(Consulta):
     def ventas(self):
         ventas = []
 
-        registros = self.consulta_simple('venta')
-
-        for i in registros:
-            id, precio, fecha, moneda, hora = i
-            ventas.append(modelos.Ventas(id, precio, fecha, moneda, hora))
+        for i in self.consulta_simple('venta'):
+            id, precio, fecha, moneda, hora, dni_usuario = i
+            ventas.append(modelos.Ventas(id, precio, fecha, moneda, hora, dni_usuario))
 
         return ventas
 
     def categorias(self):
         categorias = []
 
-        registros = self.consulta_simple('categoria')
-
-        for i in registros:
+        for i in self.consulta_simple('categoria'):
             id, descripcion, imagen = i 
             categorias.append(modelos.Categorias(id, descripcion, imagen))
         
@@ -41,9 +35,7 @@ class ServiciosConsultaSimple(Consulta):
     def monedas(self):
         monedas = []
 
-        registros = self.consulta_simple('monedas')
-
-        for i in registros:
+        for i in self.consulta_simple('monedas'):
             nombre, valor, simbolo = i
             monedas.append(modelos.Monedas(nombre, valor, simbolo))
 
@@ -52,31 +44,16 @@ class ServiciosConsultaSimple(Consulta):
     def producto_venta(self):
         producto_venta = []
 
-        registros = self.consulta_simple('producto_venta')
-
-        for i in registros:
+        for i in self.consulta_simple('producto_venta'):
             id_producto, id_venta, cantidad, precio_unitario = i
             producto_venta.append(modelos.Producto_venta(id_producto, id_venta, cantidad, precio_unitario))
 
         return producto_venta
 
-    def telf_usuarios(self):
-        telefonos = []
-
-        registros = self.consulta_simple('telf_usuario')
-
-        for i in registros:
-            telf, dni = i
-            telefonos.append(modelos.Telf_admi(telf,dni))
-        
-        return telefonos
-
     def usuarios(self):
         usuarios = []
 
-        registros = self.consulta_simple('usuario')
-
-        for i in registros:
+        for i in self.consulta_simple('usuario'):
             dni, nombre, usuario, clave, rol, acceso, n_caja, imagen = i 
             usuarios.append(modelos.Usuarios(dni, nombre, usuario, clave, rol, acceso, n_caja, imagen ))
 

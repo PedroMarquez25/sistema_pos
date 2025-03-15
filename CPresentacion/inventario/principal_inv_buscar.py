@@ -1,12 +1,16 @@
 import tkinter as tk
 import config as color
 
-from BDominio.productos.cargar_producto import CargarProductos
 from tkinter import ttk, messagebox, font
-from util.util_imagenes import leer_imagen
-from BDominio.productos.eliminar_producto import EliminarProducto
+
 from CPresentacion.inventario.principal_inv_editar import EditarProductoTop
 from CPresentacion.inventario.principal_inv_reponer import ReponerProductoTop
+
+from BDominio.productos.cargar_producto import CargarProductos
+from BDominio.productos.eliminar_producto import EliminarProducto
+
+from util.util_imagenes import leer_imagen
+
 
 class InventarioBuscar(tk.Frame):
     def __init__(self, parent):
@@ -14,6 +18,7 @@ class InventarioBuscar(tk.Frame):
         self.config(background=color.FONDO_SEGUNDARIO)
         self.pack(fill='both', expand=True ,padx=5, pady=5)
         self.ultimo_texto = ''
+        self.productos = CargarProductos()
 
         self.create_widget()
     
@@ -46,7 +51,6 @@ class InventarioBuscar(tk.Frame):
         container = tk.Frame(self, bd=0.5)
         container.place(x=20, y=140, height=450, width=1080)
 
-        # Crear encabezados
         header_frame = tk.Frame(container, bg=color.BOTON_PRODUCTOS)
         header_frame.pack(fill='x')
         
@@ -71,14 +75,11 @@ class InventarioBuscar(tk.Frame):
         self.canvas.pack(side='left', fill='both', expand=True)
         scrollbar.pack(side='right', fill='y')
 
-        self.productos = CargarProductos()
-        data = self.productos.cargar_datos_consulta()
-        
-        self.populate_list(data)
+
+        self.populate_list(self.productos.cargar_datos_consulta())
     
     def populate_list(self, datos):
         font_awesome = font.Font(family="Font Awesome 6 Free Solid" ,size=15)
-        #Datos de productos
         
         data = datos
 
@@ -100,9 +101,8 @@ class InventarioBuscar(tk.Frame):
             except Exception as e:
                 image = leer_imagen('/imagenes/sinfoto.jpg', (100, 100))
 
-            if image:
-                img_label.config(image=image)
-                img_label.image = image
+            img_label.config(image=image)
+            img_label.image = image
             
             tk.Label(row_frame, text=item['id'], width=15, anchor='center', bg=c).pack(side='left', padx=5)
             tk.Label(row_frame, text=f"{item['desc']}", width=20, anchor='center', bg=c).pack(side='left', padx=5)
@@ -145,19 +145,15 @@ class InventarioBuscar(tk.Frame):
     def detectar_eliminacion(self,event):
         texto_actual = self.entry_buscar.get()
         
-        # Verifica si se eliminó texto (comparando la longitud)
         if len(texto_actual) < len(self.ultimo_texto):
-            if len(texto_actual) == 0:
+            if len(texto_actual) == 0 :
                 self.update_lista_busqueda(self.productos.cargar_datos_consulta())
             elif self.boton_buscar_por.get() == 'Buscar por: desc':
                 self.buscar_producto()
         else:
-            if len(texto_actual) == 0:
-                self.update_lista_busqueda(self.productos.cargar_datos_consulta())
-            elif self.boton_buscar_por.get() == 'Buscar por: desc':
+            if self.boton_buscar_por.get() == 'Buscar por: desc' and len(texto_actual) != 0:
                 self.buscar_producto()
 
-        # Actualizar el último estado del texto
         self.ultimo_texto = texto_actual
 
     def edit_item(self, item):
@@ -168,7 +164,7 @@ class InventarioBuscar(tk.Frame):
 
     def delete_item(self, item, frame):
         delete = EliminarProducto()
-        if messagebox.askokcancel(title='Eliminar producto', message='¿Quieres eliminar el producto?'):
+        if messagebox.askyesno(title='Eliminar producto', message='¿Quieres eliminar el producto?'):
             if delete.delete_producto(item['id']):
                 messagebox.showinfo(title='Mensaje', message='Se elimino el producto correctamente')
                 frame.destroy()
@@ -178,7 +174,6 @@ class InventarioBuscar(tk.Frame):
     def update_lista(self):
         for frame in self.scrollable_frame.winfo_children():
             frame.destroy()
-        self.productos = CargarProductos()
         if len(self.entry_buscar.get()) != 0:
             self.buscar_producto()
         else:
@@ -187,6 +182,4 @@ class InventarioBuscar(tk.Frame):
     def update_lista_busqueda(self, data):
         for frame in self.scrollable_frame.winfo_children():
             frame.destroy()
-        self.populate_list(data)
-
-              
+        self.populate_list(data)            

@@ -1,16 +1,15 @@
 import tkinter as tk
 import config as color
 
-
 from tkinter import ttk, messagebox, font, filedialog
-from util.util_imagenes import leer_imagen
-from util.util_ventana import centrar_ventana
 
 from BDominio.usuarios.cargar_usuarios import CargarUsuario
 from BDominio.usuarios.validar_usuario import UsuarioValid
 from BDominio.usuarios.editar_usuario import EditarUsuario
 from BDominio.usuarios.eliminar_usuario import EliminarUsuario
 
+from util.util_imagenes import leer_imagen
+from util.util_ventana import centrar_ventana
 
 class UsuarioConsulta(tk.Frame):
     def __init__(self, parent, nuevo_usuario):
@@ -41,7 +40,6 @@ class UsuarioConsulta(tk.Frame):
         container = tk.Frame(self, bd=0.5)
         container.place(x=20, y=120, height=500, width=1080)
 
-        # Crear encabezados
         header_frame = tk.Frame(container, bg=color.BOTON_USUARIOS)
         header_frame.pack(fill='x')
         
@@ -70,7 +68,6 @@ class UsuarioConsulta(tk.Frame):
     
     def populate_list(self):
         font_awesome = font.Font(family="Font Awesome 6 Free Solid" ,size=15)
-        #Datos de BOTON_USUARIOS
         data = self.usuarios.Cargar_datos_usuario()
 
         si = 0
@@ -78,7 +75,6 @@ class UsuarioConsulta(tk.Frame):
         for usuario in data:            
             c = 'white' if si == 0 else "lightgray"
             si = 1 if si == 0 else 0
-
 
             row_frame = tk.Frame(self.scrollable_frame, bg=c)
             row_frame.pack(fill='x', pady=3)
@@ -96,7 +92,7 @@ class UsuarioConsulta(tk.Frame):
                       command=lambda e = usuario : self.edit_usuario(e)).pack(side='left', padx=5)
                 
             tk.Button(row_frame, text="\uf1f8",font=font_awesome, width=3, bg=color.BOTON_USUARIOS, bd = 0,
-                      command=lambda e = usuario: self.delete_usuario(e)).pack(side='left', padx=5)
+                      command=lambda e = usuario['dni']: self.delete_usuario(e)).pack(side='left', padx=5)
             
             tk.Button(row_frame, text="\uf2f1",font=font_awesome, width=3, bg=color.BOTON_ACCION, bd = 0,
                       command=lambda e = usuario: self.modificar_acceso(e)).pack(side='left', padx=5)
@@ -140,7 +136,6 @@ class UsuarioConsulta(tk.Frame):
          self.button_imagen = tk.Button(lblfrme_nuevo_usuario, text='Cargar', font=('roboto', 12), bg=color.BOTON_PRODUCTOS,
                                        command=self.load_imagen)
          self.button_imagen.grid(row=1, column=1, ipadx=5)
-
 
          lbl_dni_usario = tk.Label(lblfrme_nuevo_usuario, text='DNI', font=('roboto', 12), bg=color.FONDO_SEGUNDARIO)
          lbl_dni_usario.grid(row=2, column=0, padx=10, pady=10, sticky=tk.W)
@@ -207,7 +202,6 @@ class UsuarioConsulta(tk.Frame):
         acceso = self.acceso_original 
         imagen = self.imagen_perfil_sinfoto
 
-       
         if len(dni) == 0 or len(nombre) == 0 or len(usuario) == 0 or len(rol) == 0 or len(clave) == 0 or len(clave2) == 0:
             messagebox.showerror('Error', 'Hay campos vacios', parent = self.frame_edit_usario)
             return
@@ -225,7 +219,7 @@ class UsuarioConsulta(tk.Frame):
         
         editar = EditarUsuario()
 
-        if messagebox.askokcancel('Mensaje', '¿Actualizar usuario?', parent = self.frame_edit_usario):
+        if messagebox.askyesno('Mensaje', '¿Actualizar usuario?', parent = self.frame_edit_usario):
             if editar.editar_usuario(dni, nombre, usuario, clave, rol, acceso, caja,imagen):
                 messagebox.showinfo('Mensaje', 'Usuario actualizado correctamente', parent = self.frame_edit_usario)
                 self.frame_edit_usario.destroy()
@@ -233,9 +227,8 @@ class UsuarioConsulta(tk.Frame):
             else:
                 messagebox.showerror('Error', 'Error al actualizar el usuario', parent = self.frame_edit_usario)
         
-    def delete_usuario(self, usuario):
-       dni = usuario['dni']
-       if messagebox.askokcancel('Mensaje', '¿Eliminar usuario?'):
+    def delete_usuario(self, dni):
+       if messagebox.askyesno('Mensaje', '¿Eliminar usuario?'):
            eliminar = EliminarUsuario()
            if eliminar.eliminar_usuario(dni):
                messagebox.showinfo('Mensaje', 'Usuario eliminado')
@@ -309,7 +302,7 @@ class UsuarioConsulta(tk.Frame):
             acceso_nuevo = 0
 
         editar = EditarUsuario()
-        if messagebox.askokcancel('Mensaje', '¿Modicar acceso?',  parent = self.modificar_acceso_top):
+        if messagebox.askyesno('Mensaje', '¿Modicar acceso?',  parent = self.modificar_acceso_top):
             if editar.editar_usuario(usuario['dni'],usuario['nombre'], usuario['usuario'], usuario['clave'], usuario['rol'], acceso_nuevo, usuario['n_caja'], usuario['imagen']):
                 messagebox.showinfo('Mensaje', 'Acceso modificado',  parent = self.modificar_acceso_top)
                 self.modificar_acceso_top.destroy()
@@ -320,7 +313,12 @@ class UsuarioConsulta(tk.Frame):
     def load_imagen(self):
         file_path = filedialog.askopenfilename() #abre cuadro de dialogo
         if file_path:
-            imag = leer_imagen(file_path, (90, 90))
+            try:    
+                imag = leer_imagen(file_path, (90, 90))
+            except Exception as e:
+                imag = leer_imagen("imagenes/sinfoto.jpg", (90, 90))
+                file_path = "imagenes/sinfoto.jpg"
+                messagebox.showerror('Error', 'Error al cargar la imagen',parent = self.frame_edit_usario)
             self.imagen.config(image=imag)
             self.imagen.image = imag
             self.imagen_perfil_sinfoto = file_path

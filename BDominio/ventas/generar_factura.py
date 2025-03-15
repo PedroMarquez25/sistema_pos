@@ -1,9 +1,8 @@
+import webbrowser
+import os
+
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
-from datetime import datetime
-import tempfile
-import os
-import webbrowser
 
 from BDominio.ventas.cargar_datos_venta import DatosVenta
 from BDominio.ventas.cargar_productos_venta import DatosProductoVenta
@@ -15,7 +14,6 @@ class Factura:
 
         datos_pv = DatosProductoVenta()
         self.producto_venta = datos_pv.datos_producto_venta(id_venta)
-
         
     def calcular_total(self):
         return sum(item['cantidad'] * item['precio'] for item in self.producto_venta)
@@ -72,7 +70,3 @@ class Factura:
 
         except Exception as e:
             print(f"Error en vista previa: {e}")
-
-        
-
-

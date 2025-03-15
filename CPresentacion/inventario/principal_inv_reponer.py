@@ -1,22 +1,22 @@
 import tkinter as tk
 import config as color
 
-from util.util_ventana import centrar_ventana
-from tkinter import font, messagebox, ttk, filedialog
-from util.util_imagenes import leer_imagen
-from BDominio.productos.categorias_datos import DatosCategoria
+from tkinter import font, messagebox, ttk
+
 from BDominio.productos.editar_producto import EditarProducto
 
+from util.util_ventana import centrar_ventana
+from util.util_imagenes import leer_imagen
 
 class ReponerProductoTop(tk.Toplevel):
     def __init__(self, master, producto, update_lista):
         super().__init__(master)
-        self.title('R Producto')
         self.geometry((centrar_ventana(self, 450, 600)))
+        self.title('Reponer Producto')
+        self.config(bg=color.FONDO_SEGUNDARIO)
         self.resizable(0, 0)
         self.grab_set()
-        self.config(bg=color.FONDO_SEGUNDARIO)
-
+        
         self.producto = producto
         self.actualizar_lista = update_lista
         self.create_widgets()
@@ -40,10 +40,13 @@ class ReponerProductoTop(tk.Toplevel):
         self.imagen = tk.Label(self.frame_formulario)
         self.imagen.grid(row=0, column=1, padx=15, pady=5)
 
-        img = leer_imagen(self.producto['imagen'], (120, 120))
-        if img:
-                self.imagen.config(image=img)
-                self.imagen.image = img
+        try:
+             img = leer_imagen(self.producto['imagen'], (120, 120))
+        except Exception as e:
+            img = leer_imagen('imagenes/sinfoto.jpg', (120,120))
+       
+        self.imagen.config(image=img)
+        self.imagen.image = img
         
         #descripcion
         lbl_descripcion = tk.Label(self.frame_formulario, text='Descripcion', font=('roboto', 12), bg=color.FONDO_SEGUNDARIO)
@@ -82,7 +85,6 @@ class ReponerProductoTop(tk.Toplevel):
             return 0
          
          cantidad = self.entry_cantidad_reponer.get()
-
          editar = EditarProducto()
 
          if messagebox.askretrycancel('Reponer producto', '¿Quieres guardar los cambios?', parent = self): 

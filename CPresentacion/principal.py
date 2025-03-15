@@ -1,9 +1,6 @@
 import tkinter as tk
 import config as colores
-
-from util.util_ventana import centrar_ventana
-from util.util_imagenes import leer_imagen
-from tkinter import font, messagebox, ttk
+from tkinter import font, messagebox
 
 #inventario
 from CPresentacion.inventario.principal_inv_consulta import InventarioConsulta
@@ -13,11 +10,13 @@ from CPresentacion.inventario.principal_inv_categoira import InventarioCatalogo
 #usuarios
 from CPresentacion.usuarios.consultar_usuario import UsuarioConsulta
 from CPresentacion.usuarios.registrar_usuario import UsuariosRegistrar
-
+#ventas
 from CPresentacion.ventas.consultar_venta import VentasConsulta
 from CPresentacion.home import Home
 
 from BDominio.usuarios.cargar_usuarios import CargarUsuario
+
+from util.util_imagenes import leer_imagen
 
 class Principal(tk.Frame):
     def __init__(self, parent, mostrar_login, mostrar_PuntoVenta, usuario):
@@ -34,8 +33,6 @@ class Principal(tk.Frame):
         self.widgets_barra_superior()
         self.widgets_panel_izquierdo()
 
-
-
     def paneles(self):
         self.barra_superior = tk.Frame(self, bg=colores.COLOR_SEGUNDARIO, height=60)
         self.barra_superior.pack(side=tk.TOP, fill=tk.X)
@@ -45,8 +42,7 @@ class Principal(tk.Frame):
 
         self.cuerpo = tk.Frame(self, background=colores.FONDO_PRINCIPAL, bd=2)
         self.cuerpo.pack(side=tk.RIGHT, fill='both' ,expand=True)
-
-        
+     
     def widgets_barra_superior(self):
         self.icono = tk.Button(self.barra_superior, text= '\uf0c9', font=self.font_awesome,
                                )
@@ -57,7 +53,7 @@ class Principal(tk.Frame):
         self.lbl_nombre.config(bg=colores.COLOR_SEGUNDARIO, fg=colores.COLOR_TEXTO)
         self.lbl_nombre.pack(side=tk.LEFT)
 
-        #====================crear imagen de perfil con un canvas================
+        #====================crear imagen de perfil=========================================
         cargar_ima = CargarUsuario()
         try:
             self.imagen = leer_imagen(cargar_ima.Cargar_imagen(self.usuario), (50,40))
@@ -67,16 +63,13 @@ class Principal(tk.Frame):
         self.button_perfil = tk.Button(self.barra_superior, image=self.imagen, borderwidth=0, highlightthickness=0)
         self.button_perfil.pack(side=tk.RIGHT, padx= 10, pady=10)
 
-
         #================Label con el nombre del usuario=======================
-        self.lbl_nombre_usuario = tk.Label(self.barra_superior, text=self.usuario ,font=('Lato',15))
-        self.lbl_nombre_usuario.config(bg=colores.COLOR_SEGUNDARIO, fg=colores.COLOR_TEXTO)
-        self.lbl_nombre_usuario.pack(side=tk.RIGHT, padx=5 )
+        lbl_nombre_usuario = tk.Label(self.barra_superior, text=self.usuario ,font=('Lato',15))
+        lbl_nombre_usuario.config(bg=colores.COLOR_SEGUNDARIO, fg=colores.COLOR_TEXTO)
+        lbl_nombre_usuario.pack(side=tk.RIGHT, padx=5 )
 
         #================Boton de notificaciones==================================
-        self.button_notify = tk.Button(self.barra_superior, text="\uf0f3", font=self.font_awesome,
-                                       )
-        self.button_notify.config(bg=colores.COLOR_SEGUNDARIO, fg=colores.COLOR_TEXTO, bd=0)
+        self.button_notify = tk.Button(self.barra_superior, text="\uf0f3", font=self.font_awesome, bg=colores.COLOR_SEGUNDARIO, fg=colores.COLOR_TEXTO, bd=0)
         self.button_notify.pack(side=tk.RIGHT, padx = 5)
 
     def widgets_panel_izquierdo(self):
@@ -150,20 +143,20 @@ class Principal(tk.Frame):
         self.btn_punto_venta.config(bg = colores.COLOR_PRINCIPAL, fg=colores.COLOR_TEXTO, font=self.font_aw, anchor='w')
         self.btn_punto_venta.pack(side=tk.BOTTOM, pady=pad, ipady=5)
 
-
     def cerrar_turno(self):
-        respuesta = messagebox.askyesno(title='Mensaje', message='¿Quieres salir?')
-        if respuesta:
-            self.mostrar_login()    
+        if messagebox.askyesno(title='Mensaje', message='¿Quieres salir?'):
+            self.mostrar_login()   
+
     def abrir_pos(self):
-        respuesta = messagebox.askyesno('Confirmacion', '¿Quieres abril el punto de venta?')
-        if respuesta:
+        if messagebox.askyesno('Confirmacion', '¿Quieres abril el punto de venta?'):
             self.mostrar_PuntoVenta(self.usuario)
+            
     def toggle_panel(self):
         if self.panel_izquierdo.winfo_ismapped():
             self.panel_izquierdo.pack_forget()
         else:
             self.panel_izquierdo.pack(side=tk.LEFT, fill='y')
+
     def notify(self):
         self.notificaciones = tk.Toplevel(self)
         self.notificaciones.geometry("400x500+900+70")
@@ -180,12 +173,15 @@ class Principal(tk.Frame):
     def inventario_consulta(self):
         self.clear_body()
         InventarioConsulta(self.cuerpo, self.inventario_registrar)
+
     def inventario_registrar(self):
         self.clear_body()
         InventarioRegistrar(self.cuerpo)
+
     def inventario_buscar(self):
         self.clear_body()
         InventarioBuscar(self.cuerpo)
+
     def inventario_catalago(self):
         self.clear_body()
         InventarioCatalogo(self.cuerpo)
@@ -198,14 +194,13 @@ class Principal(tk.Frame):
     def registrar_usuario(self):
         self.clear_body()
         UsuariosRegistrar(self.cuerpo)
-    
+
+    #ventas
     def lista_venta(self):
         self.clear_body()
         VentasConsulta(self.cuerpo)
-
+        
+    #home
     def home(self):
         self.clear_body()
         Home(self.cuerpo)
-
-
-
